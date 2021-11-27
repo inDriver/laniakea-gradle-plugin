@@ -3,8 +3,11 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "Laniakea Gradle Plugin"
 include ':app'
+include ':features:feature-1'
+include ':features:feature-2'
+include ':features:feature2-1'
+include ':features:feature2-2'
