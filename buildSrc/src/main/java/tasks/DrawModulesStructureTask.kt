@@ -18,12 +18,11 @@ open class DrawModulesStructureTask : DefaultTask() {
     }
 
     private fun printModulesStructure() {
-        val parentToChild = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
-        parentToChild.forEach { family ->
-            val parent = family.first
-            val children = family.second
-            println(parent)
-            children.forEach { println("    $it") }
+        val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
+        graph.nodes.forEach { node ->
+            println(node.name)
+            node.children
+                .forEach { println("    $it") }
         }
     }
 }

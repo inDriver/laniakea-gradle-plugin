@@ -1,5 +1,7 @@
 package extensions
 
+import models.Graph
+import models.GraphNode
 import org.gradle.api.Project
 import org.gradle.api.internal.artifacts.dependencies.DefaultProjectDependency
 
@@ -10,7 +12,7 @@ import org.gradle.api.internal.artifacts.dependencies.DefaultProjectDependency
  */
 fun Project.getParentToChildrenStructure(
     configurationsToLook: Set<String>
-): List<Pair<String, ArrayList<String>>> {
+): Graph {
     val parentToChild = hashMapOf<String, ArrayList<String>>()
     rootProject.subprojects
         .flatMap { subProject ->
@@ -36,7 +38,9 @@ fun Project.getParentToChildrenStructure(
                 }
         }
 
-    return parentToChild.toList()
+    val graphNodes = parentToChild.toList()
+        .map { GraphNode(it.first, it.second) }
+    return Graph(graphNodes)
 }
 
 /**
