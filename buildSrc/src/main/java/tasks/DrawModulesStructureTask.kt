@@ -3,6 +3,7 @@ package tasks
 import extensions.getParentToChildrenStructure
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import utils.GraphVizUtil
 
 // Default modules connections
 val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
@@ -24,5 +25,10 @@ open class DrawModulesStructureTask : DefaultTask() {
             node.children
                 .forEach { println("    $it") }
         }
+    }
+
+    private fun generateGraphImage() {
+        val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
+        GraphVizUtil.generateGraphImage("test", graph)
     }
 }

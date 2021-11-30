@@ -17,5 +17,5 @@ gradlePlugin {
 }
 
 dependencies {
-    //implementation("guru.nidi:graphviz-java-all-j2v8:0.18.1") // https://github.com/nidi3/graphviz-java
+    implementation("guru.nidi:graphviz-java-all-j2v8:0.18.1") // https://github.com/nidi3/graphviz-java
 }
