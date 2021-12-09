@@ -29,15 +29,14 @@ open class DrawModulesStructureTask : DefaultTask() {
         printModulesStructure(filteredNodes)
     }
 
-    private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
-        return if (filtersInput.isEmpty()) {
+    private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> =
+        if (filtersInput.isEmpty()) {
             nodesList
         } else {
             nodesList.filter { node ->
                 filtersInput.any { filter -> node.name == filter }
             }
         }
-    }
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
         graphNodes.forEach { node ->
