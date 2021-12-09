@@ -26,7 +26,6 @@ open class DrawModulesStructureTask : DefaultTask() {
         val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
 
-
         printModulesStructure(filteredNodes)
     }
 
@@ -38,7 +37,6 @@ open class DrawModulesStructureTask : DefaultTask() {
                 filtersInput.any { filter -> node.name == filter }
             }
         }
-
     }
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
