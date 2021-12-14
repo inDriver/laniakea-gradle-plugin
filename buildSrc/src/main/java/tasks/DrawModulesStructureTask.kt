@@ -34,7 +34,7 @@ open class DrawModulesStructureTask : DefaultTask() {
             nodesList
         } else {
             nodesList.filter { node ->
-                filtersInput.any { filter -> node.name == filter }
+                filtersInput.any { filter -> node.name.contains(filter) }
             }
         }
 
