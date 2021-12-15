@@ -11,7 +11,7 @@ gradlePlugin {
         create("BuildManager") {
             id = "com.indriver.laniakea.plugin"
             implementationClass = "LaniakeaPlugin"
-            version = "1.0.0"
+            version = "0.0.1"
         }
     }
 }
