@@ -15,6 +15,7 @@ object GraphVizUtil {
 
     private const val IMAGE_FILE_NAME = "test"
     private const val IMAGE_WIDTH = 5000
+    private const val DRAW_ALL_PATHS = -1
 
     fun generateGraphImage(pictureName: String, graph: Graph) {
         val graphFile = "$pictureName.png"
@@ -39,13 +40,15 @@ object GraphVizUtil {
     fun generateGraphImage(
         appGraph: Graph,
         rootNodeName: String,
-        longestPath: List<GraphNode> = emptyList()
+        longestPaths: List<List<GraphNode>> = emptyList(),
+        pathNumberToHighlight: Int = DRAW_ALL_PATHS
     ) {
         val mutableGraph = Factory.mutGraph(IMAGE_FILE_NAME)
             .setDirected(true)
 
         val rootNode = appGraph.findNodeByName(rootNodeName)
-        initGraph(mutableGraph, null, appGraph, rootNode, longestPath)
+        val longestPathNodePairs = convertPathsToPairs(longestPaths, pathNumberToHighlight)
+        initGraph(mutableGraph, null, appGraph, rootNode, longestPathNodePairs)
 
         val graphFile = "${IMAGE_FILE_NAME}.png"
         Graphviz.fromGraph(mutableGraph)
@@ -59,7 +62,7 @@ object GraphVizUtil {
         parent: MutableNode?,
         appGraph: Graph,
         node: GraphNode,
-        longestPath: List<GraphNode>
+        longestPathNodePairs: Set<Pair<String, String>>
     ) {
         val mutNode = Factory.mutNode(node.name)
 
@@ -67,13 +70,8 @@ object GraphVizUtil {
             mutableGraph.rootNodes().add(mutNode)
         } else {
             val link = parent.linkTo(mutNode)
-            val parentIndex = longestPath.indexOfFirst {
-                it.name == "${parent.name()}"
-            }
-            val nodeIndex = longestPath.indexOf(node)
-            val areIndicesValid = parentIndex != -1 && nodeIndex != -1
-            val areAdjacentIndices = parentIndex == nodeIndex - 1
-            val linkColor = if (areIndicesValid && areAdjacentIndices) {
+            val nodePair = Pair("${parent.name()}", "${mutNode.name()}")
+            val linkColor = if (nodePair in longestPathNodePairs) {
                 Color.RED
             } else {
                 Color.BLACK
@@ -84,7 +82,41 @@ object GraphVizUtil {
 
         for (childName in node.children) {
             val nextNode = appGraph.findNodeByName(childName)
-            initGraph(mutableGraph, mutNode, appGraph, nextNode, longestPath)
+            initGraph(mutableGraph, mutNode, appGraph, nextNode, longestPathNodePairs)
         }
+    }
+
+    private fun convertPathsToPairs(
+        longestPaths: List<List<GraphNode>>,
+        pathNumberToHighlight: Int
+    ): Set<Pair<String, String>> {
+        return when {
+            longestPaths.isEmpty() -> emptySet()
+
+            pathNumberToHighlight == DRAW_ALL_PATHS -> {
+                longestPaths.map { path -> convertPathToPairs(path) }
+                    .flatten()
+                    .toSet()
+            }
+
+            pathNumberToHighlight in 0..longestPaths.lastIndex -> {
+                val path = longestPaths[pathNumberToHighlight]
+                convertPathToPairs(path)
+            }
+
+            else -> emptySet()
+        }
+    }
+
+    private fun convertPathToPairs(path: List<GraphNode>): Set<Pair<String, String>> {
+        val pairs = mutableListOf<Pair<String, String>>()
+        path.forEachIndexed { index, node ->
+            if (index < path.lastIndex) {
+                val nextNode = path[index + 1]
+                val pair = Pair(node.name, nextNode.name)
+                pairs.add(pair)
+            }
+        }
+        return pairs.toSet()
     }
 }

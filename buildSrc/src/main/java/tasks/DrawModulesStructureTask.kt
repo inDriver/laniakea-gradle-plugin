@@ -34,7 +34,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         val longestPath = if (shouldDrawCriticalPath) {
             val longestPaths = graph.findLongestPaths(rootNodeName)
             printLongestPaths(longestPaths)
-            longestPaths[0]
+            longestPaths
         } else {
             emptyList()
         }
