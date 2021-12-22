@@ -1,5 +1,6 @@
 package tasks
 
+import extensions.findLongestPaths
 import extensions.getParentToChildrenStructure
 import models.GraphNode
 import org.gradle.api.DefaultTask
@@ -18,14 +19,28 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var filtersInput: List<String> = listOf()
 
+    @set:Option(option = "cp", description = "flag to draw critical path")
+    @get:Input
+    var shouldDrawCriticalPath: Boolean = false
+
     @TaskAction
     fun run() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
 
-        println("Registered filters: $filtersInput")
+        println("Registered filters: $filtersInput\n")
         val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
-        val filteredNodes = filterNodesIfNeeded(graph.nodes)
 
+        val rootNodeName = ":${project.name}"
+        val longestPath = if (shouldDrawCriticalPath) {
+            val longestPaths = graph.findLongestPaths(rootNodeName)
+            printLongestPaths(longestPaths)
+            longestPaths[0]
+        } else {
+            emptyList()
+        }
+        GraphVizUtil.generateGraphImage(graph, rootNodeName, longestPath)
+
+        val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
     }
 
@@ -39,6 +54,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         }
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
+        println("Modules structure:")
         graphNodes.forEach { node ->
             println(node.name)
             node.children
@@ -46,8 +62,12 @@ open class DrawModulesStructureTask : DefaultTask() {
         }
     }
 
-    private fun generateGraphImage() {
-        val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
-        GraphVizUtil.generateGraphImage("test", graph)
+    private fun printLongestPaths(paths: List<List<GraphNode>>) {
+        println("Longest paths: ${paths.size}")
+        paths.forEachIndexed { index, path ->
+                val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
+                println(pathStr)
+        }
+        println()
     }
 }
