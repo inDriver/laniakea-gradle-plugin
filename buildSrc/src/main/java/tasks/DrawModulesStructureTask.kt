@@ -1,6 +1,7 @@
 package tasks
 
 import extensions.getParentToChildrenStructure
+import models.Graph
 import models.GraphNode
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
@@ -18,25 +19,48 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var filtersInput: List<String> = listOf()
 
+    @set:Option(option = "dep", description = "flag to draw all dependencies of modules")
+    @get:Input
+    var showModulesDependencies: Boolean = false
+
     @TaskAction
     fun run() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
 
         println("Registered filters: $filtersInput")
+        println("show modules dependencies: $showModulesDependencies")
         val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
-        val filteredNodes = filterNodesIfNeeded(graph.nodes)
 
+        val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
+
+        val filteredGraph = Graph(filteredNodes)
+        generateGraphImage(filteredGraph)
     }
 
-    private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> =
+    private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
         if (filtersInput.isEmpty()) {
-            nodesList
+            return nodesList
+        }
+
+        val filteredList = nodesList.filter { node ->
+            isFilterPassed(node.name)
+        }
+
+        return if (showModulesDependencies) {
+            filteredList
         } else {
-            nodesList.filter { node ->
-                filtersInput.any { filter -> node.name.contains(filter) }
+            filteredList.map { node ->
+                GraphNode(
+                    name = node.name,
+                    children = node.children.filter(::isFilterPassed)
+                )
             }
         }
+    }
+
+    private fun isFilterPassed(name: String) =
+        filtersInput.any(name::contains)
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
         graphNodes.forEach { node ->
@@ -46,8 +70,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         }
     }
 
-    private fun generateGraphImage() {
-        val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
+    private fun generateGraphImage(graph: Graph) {
         GraphVizUtil.generateGraphImage("test", graph)
     }
 }
