@@ -2,6 +2,7 @@ package tasks
 
 import extensions.findLongestPaths
 import extensions.getParentToChildrenStructure
+import models.Graph
 import models.GraphNode
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
@@ -23,35 +24,49 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var shouldDrawCriticalPath: Boolean = false
 
+    @set:Option(option = "dep", description = "flag to draw all dependencies of modules")
+    @get:Input
+    var showModulesDependencies: Boolean = false
+
     @TaskAction
     fun run() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
-
         println("Registered filters: $filtersInput\n")
+
         val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
-
-        val rootNodeName = ":${project.name}"
-        val longestPath = if (shouldDrawCriticalPath) {
-            val longestPaths = graph.findLongestPaths(rootNodeName)
-            printLongestPaths(longestPaths)
-            longestPaths
-        } else {
-            emptyList()
-        }
-        GraphVizUtil.generateGraphImage(graph, rootNodeName, longestPath)
-
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
+
+        val longestPaths = findLongestPaths(graph)
+        printLongestPaths(longestPaths)
+
+        val filteredGraph = Graph(filteredNodes)
+        GraphVizUtil.generateGraphImage(filteredGraph, longestPaths)
     }
 
-    private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> =
+    private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
         if (filtersInput.isEmpty()) {
-            nodesList
+            return nodesList
+        }
+
+        val filteredList = nodesList.filter { node ->
+            isFilterPassed(node.name)
+        }
+
+        return if (showModulesDependencies) {
+            filteredList
         } else {
-            nodesList.filter { node ->
-                filtersInput.any { filter -> node.name.contains(filter) }
+            filteredList.map { node ->
+                GraphNode(
+                    name = node.name,
+                    children = node.children.filter(::isFilterPassed)
+                )
             }
         }
+    }
+
+    private fun isFilterPassed(name: String) =
+        filtersInput.any(name::contains)
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
         println("Modules structure:")
@@ -60,13 +75,28 @@ open class DrawModulesStructureTask : DefaultTask() {
             node.children
                 .forEach { println("    $it") }
         }
+        println()
+    }
+
+
+    private fun findLongestPaths(graph: Graph): List<List<GraphNode>> {
+        return if (!shouldDrawCriticalPath) {
+            listOf()
+        } else {
+            val rootNodeName = ":${project.name}"
+            graph.findLongestPaths(rootNodeName)
+        }
     }
 
     private fun printLongestPaths(paths: List<List<GraphNode>>) {
+        if (!shouldDrawCriticalPath) {
+            return
+        }
+
         println("Longest paths: ${paths.size}")
         paths.forEachIndexed { index, path ->
-                val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
-                println(pathStr)
+            val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
+            println(pathStr)
         }
         println()
     }
