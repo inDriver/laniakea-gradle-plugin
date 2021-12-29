@@ -24,9 +24,17 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var shouldDrawCriticalPath: Boolean = false
 
+    @set:Option(option = "rootModule", description = "root module for critical path")
+    @get:Input
+    var rootModule: String = DEFAULT_ROOT_MODULE
+
     @set:Option(option = "dep", description = "flag to draw all dependencies of modules")
     @get:Input
     var showModulesDependencies: Boolean = false
+
+    private companion object {
+        const val DEFAULT_ROOT_MODULE = ":app"
+    }
 
     @TaskAction
     fun run() {
@@ -83,8 +91,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         return if (!shouldDrawCriticalPath) {
             listOf()
         } else {
-            val rootNodeName = ":${project.name}"
-            graph.findLongestPaths(rootNodeName)
+            graph.findLongestPaths(rootModule)
         }
     }
 
@@ -93,7 +100,7 @@ open class DrawModulesStructureTask : DefaultTask() {
             return
         }
 
-        println("Longest paths: ${paths.size}")
+        println("Amount of longest paths relative to \"$rootModule\" module: ${paths.size}")
         paths.forEachIndexed { index, path ->
             val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
             println(pathStr)

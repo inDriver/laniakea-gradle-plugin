@@ -3,9 +3,12 @@ package extensions
 import models.Graph
 import models.GraphNode
 import models.MostDistantNodesResult
+import java.lang.IllegalArgumentException
 
-fun Graph.findNodeByName(name: String): GraphNode =
-    nodes.first { it.name == name }
+fun Graph.findNodeByName(name: String): GraphNode {
+    val node = nodes.firstOrNull { it.name == name }
+    return node ?: throw IllegalArgumentException("Graph has no node with name $name")
+}
 
 fun Graph.findLongestPaths(rootNodeName: String): List<List<GraphNode>> {
     if (nodes.isEmpty()) {
