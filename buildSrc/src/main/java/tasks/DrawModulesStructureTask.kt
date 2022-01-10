@@ -1,5 +1,6 @@
 package tasks
 
+import extensions.findLongestPaths
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
@@ -19,23 +20,36 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var filtersInput: List<String> = listOf()
 
+    @set:Option(option = "cp", description = "flag to draw critical path")
+    @get:Input
+    var shouldDrawCriticalPath: Boolean = false
+
+    @set:Option(option = "rootModule", description = "root module for critical path")
+    @get:Input
+    var rootModule: String = DEFAULT_ROOT_MODULE
+
     @set:Option(option = "dep", description = "flag to draw all dependencies of modules")
     @get:Input
     var showModulesDependencies: Boolean = false
 
+    private companion object {
+        const val DEFAULT_ROOT_MODULE = ":app"
+    }
+
     @TaskAction
     fun run() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
+        println("Registered filters: $filtersInput\n")
 
-        println("Registered filters: $filtersInput")
-        println("show modules dependencies: $showModulesDependencies")
         val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
-
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 
+        val longestPaths = findLongestPaths(graph)
+        printLongestPaths(longestPaths)
+
         val filteredGraph = Graph(filteredNodes)
-        generateGraphImage(filteredGraph)
+        GraphVizUtil.generateGraphImage(filteredGraph, longestPaths)
     }
 
     private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
@@ -63,14 +77,34 @@ open class DrawModulesStructureTask : DefaultTask() {
         filtersInput.any(name::contains)
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
+        println("Modules structure:")
         graphNodes.forEach { node ->
             println(node.name)
             node.children
                 .forEach { println("    $it") }
         }
+        println()
     }
 
-    private fun generateGraphImage(graph: Graph) {
-        GraphVizUtil.generateGraphImage("test", graph)
+
+    private fun findLongestPaths(graph: Graph): List<List<GraphNode>> {
+        return if (!shouldDrawCriticalPath) {
+            listOf()
+        } else {
+            graph.findLongestPaths(rootModule)
+        }
+    }
+
+    private fun printLongestPaths(paths: List<List<GraphNode>>) {
+        if (!shouldDrawCriticalPath) {
+            return
+        }
+
+        println("Amount of longest paths relative to \"$rootModule\" module: ${paths.size}")
+        paths.forEachIndexed { index, path ->
+            val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
+            println(pathStr)
+        }
+        println()
     }
 }
