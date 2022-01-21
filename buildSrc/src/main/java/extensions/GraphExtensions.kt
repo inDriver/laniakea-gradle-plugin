@@ -74,3 +74,27 @@ fun Graph.findMostDistantNodes(rootNodeName: String): MostDistantNodesResult {
     findNodes(rootNode)
     return MostDistantNodesResult(maxDistanceInNodes, mostDistantNodes)
 }
+
+
+fun Graph.findRootNode(): Set<GraphNode> {
+    if (nodes.isEmpty()) {
+        return emptySet()
+    }
+
+    val rootCandidates = mutableSetOf<GraphNode>()
+    val childNodes = mutableSetOf<String>()
+    nodes.forEach { node ->
+        if (node.name !in childNodes) {
+            rootCandidates.add(node)
+        } else {
+            rootCandidates.remove(node)
+        }
+
+        node.children.forEach { childNode ->
+            childNodes.add(childNode)
+            rootCandidates.removeIf { it.name == childNode }
+        }
+    }
+
+    return rootCandidates
+}
