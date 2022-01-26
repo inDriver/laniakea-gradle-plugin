@@ -9,6 +9,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import utils.GraphVizUtil
+import utils.ImageFileUtil
 
 // Default modules connections
 val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
@@ -49,7 +50,8 @@ open class DrawModulesStructureTask : DefaultTask() {
         printLongestPaths(longestPaths)
 
         val filteredGraph = Graph(filteredNodes)
-        GraphVizUtil.generateGraphImage(filteredGraph, longestPaths)
+        val imageFile = ImageFileUtil.creteImageFile(filtersInput)
+        GraphVizUtil.generateGraphImage(filteredGraph, longestPaths, imageFile)
     }
 
     private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
