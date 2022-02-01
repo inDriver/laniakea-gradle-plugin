@@ -10,9 +10,10 @@ object ImageFileUtil {
 
     private const val GRAPH_IMAGES_DIRECTORY = "laniakeaImages"
     private const val DEFAULT_IMAGE_FILE_NAME = "graph"
+    private const val MAX_FILTER_AMOUNT_IN_FILE_NAME = 4
 
     private val dateFormatter by lazy {
-        SimpleDateFormat("ddMMHHmmss", Locale.getDefault())
+        SimpleDateFormat("ddMM-HHmmss", Locale.getDefault())
     }
 
     fun creteImageFile(filters: List<String>): File {
@@ -27,7 +28,10 @@ object ImageFileUtil {
         val fileName = if (filters.isEmpty()) {
             DEFAULT_IMAGE_FILE_NAME
         } else {
-            filters.take(2).joinToString("-") { it.replace(":", "") }
+            filters.take(MAX_FILTER_AMOUNT_IN_FILE_NAME)
+                .joinToString("-") {
+                    it.replace(":", "")
+                }
         }
         val timestamp = dateFormatter.format(Date().time)
         val filePath = "${imageDirectory.path}/$fileName-$timestamp.png"
