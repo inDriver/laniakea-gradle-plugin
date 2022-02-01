@@ -5,7 +5,6 @@ import extensions.findRootNode
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
-import models.RootNodesResult
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -43,14 +42,10 @@ open class DrawModulesStructureTask : DefaultTask() {
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 
-        val rootNodesResult = getRootNodes(graph)
-        if (rootNodesResult is RootNodesResult.Error) {
-            println(rootNodesResult.msg)
-        }
-
-        val longestPaths = if (rootNodesResult is RootNodesResult.Success) {
-            val foundLongestPaths = findLongestPaths(graph, rootNodesResult.root)
-            printLongestPaths(foundLongestPaths, rootNodesResult.root)
+        val rootNode = getRootNodes(graph)
+        val longestPaths = if (rootNode != null) {
+            val foundLongestPaths = findLongestPaths(graph, rootNode)
+            printLongestPaths(foundLongestPaths, rootNode)
             foundLongestPaths
         } else {
             emptyList()
@@ -60,24 +55,25 @@ open class DrawModulesStructureTask : DefaultTask() {
         GraphVizUtil.generateGraphImage(filteredGraph, longestPaths)
     }
 
-    private fun getRootNodes(graph: Graph): RootNodesResult {
+    private fun getRootNodes(graph: Graph): String? {
         if (rootModule.isNotEmpty()) {
-            return RootNodesResult.Success(rootModule)
+            return rootModule
         }
 
         val rootNodes = graph.findRootNode()
         return when {
             rootNodes.isEmpty() -> {
-                RootNodesResult.Error("The project doesn't has a root module")
+                println("The project doesn't has a root module")
+                null
             }
             rootNodes.size > 1 -> {
                 val msg = "The project has a few root modules. " +
                         "You should set a root module: ${rootNodes.map { it.name }}"
-                RootNodesResult.Error(msg)
+                println(msg)
+                null
             }
             else -> {
-                val root = rootNodes.first().name
-                RootNodesResult.Success(root)
+                rootNodes.first().name
             }
         }
     }
