@@ -9,9 +9,10 @@ import models.Graph
 import models.GraphNode
 import java.io.File
 
+
 object GraphVizUtil {
 
-    private const val IMAGE_FILE_NAME = "test"
+    private const val GRAPH_NAME = "laniakea_graph"
     private const val IMAGE_WIDTH = 5000
     private const val DRAW_ALL_PATHS = -1
 
@@ -38,12 +39,13 @@ object GraphVizUtil {
     fun generateGraphImage(
         graph: Graph,
         longestPaths: List<List<GraphNode>> = emptyList(),
+        imageFile: File,
         pathNumberToHighlight: Int = DRAW_ALL_PATHS
     ) {
         val graphPairs = convertGraphToPairs(graph)
         val longestPathPairs = convertPathsToPairs(longestPaths, pathNumberToHighlight)
 
-        val mutableGraph = Factory.mutGraph(IMAGE_FILE_NAME)
+        val mutableGraph = Factory.mutGraph(GRAPH_NAME)
             .setDirected(true)
 
         graphPairs.forEach { nodePair ->
@@ -62,11 +64,10 @@ object GraphVizUtil {
             mutableGraph.add(firstNode)
         }
 
-        val graphFile = "${IMAGE_FILE_NAME}.png"
         Graphviz.fromGraph(mutableGraph)
             .width(IMAGE_WIDTH)
             .render(Format.PNG)
-            .toFile(File(graphFile))
+            .toFile(imageFile)
     }
 
     private fun convertGraphToPairs(graph: Graph): Set<Pair<String, String?>> {
