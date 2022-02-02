@@ -38,8 +38,8 @@ object GraphVizUtil {
 
     fun generateGraphImage(
         graph: Graph,
-        longestPaths: List<List<GraphNode>> = emptyList(),
         imageFile: File,
+        longestPaths: List<List<GraphNode>>,
         pathNumberToHighlight: Int = DRAW_ALL_PATHS
     ) {
         val graphPairs = convertGraphToPairs(graph)

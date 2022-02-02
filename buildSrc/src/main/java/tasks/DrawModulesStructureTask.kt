@@ -4,6 +4,7 @@ import extensions.findLongestPaths
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
+import models.LaniakeaPluginConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -33,6 +34,9 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var showModulesDependencies: Boolean = false
 
+    @get:Input
+    var config = LaniakeaPluginConfig()
+
     private companion object {
         const val DEFAULT_ROOT_MODULE = ":app"
     }
@@ -46,12 +50,13 @@ open class DrawModulesStructureTask : DefaultTask() {
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 
-        val longestPaths = findLongestPaths(graph)
-        printLongestPaths(longestPaths)
+        val longestPaths = graph.findLongestPaths(rootModule)
+        printCriticalPathInformation(longestPaths)
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
-        GraphVizUtil.generateGraphImage(filteredGraph, longestPaths, imageFile)
+        val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
+        GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
     }
 
     private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
@@ -97,16 +102,22 @@ open class DrawModulesStructureTask : DefaultTask() {
         }
     }
 
-    private fun printLongestPaths(paths: List<List<GraphNode>>) {
-        if (!shouldDrawCriticalPath) {
-            return
-        }
-
+    private fun printCriticalPathInformation(paths: List<List<GraphNode>>) {
         println("Amount of longest paths relative to \"$rootModule\" module: ${paths.size}")
         paths.forEachIndexed { index, path ->
             val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
             println(pathStr)
         }
-        println()
+
+        val currentCriticalPathLength = paths.first().size - 1
+        println("\nThe length of the longest path relative to \"$rootModule\" module:" +
+                " $currentCriticalPathLength")
+
+        config.maxCriticalPathLength?.let { maxCriticalPathLength ->
+            if (currentCriticalPathLength >= maxCriticalPathLength) {
+                println("Warning! The length of the longest path is more than the threshold " +
+                        "value $maxCriticalPathLength!")
+            }
+        }
     }
 }
