@@ -1,7 +1,7 @@
 package tasks
 
 import extensions.findLongestPaths
-import extensions.findRootNode
+import extensions.findRootNodeCandidates
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
@@ -42,7 +42,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 
-        val rootNode = getRootNodes(graph)
+        val rootNode = getRootNode(graph)
         val longestPaths = if (rootNode != null) {
             val foundLongestPaths = findLongestPaths(graph, rootNode)
             printLongestPaths(foundLongestPaths, rootNode)
@@ -55,12 +55,12 @@ open class DrawModulesStructureTask : DefaultTask() {
         GraphVizUtil.generateGraphImage(filteredGraph, longestPaths)
     }
 
-    private fun getRootNodes(graph: Graph): String? {
+    private fun getRootNode(graph: Graph): String? {
         if (rootModule.isNotEmpty()) {
             return rootModule
         }
 
-        val rootNodes = graph.findRootNode()
+        val rootNodes = graph.findRootNodeCandidates()
         return when {
             rootNodes.isEmpty() -> {
                 println("The project doesn't has a root module")

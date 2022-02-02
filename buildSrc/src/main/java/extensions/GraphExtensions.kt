@@ -76,7 +76,7 @@ fun Graph.findMostDistantNodes(rootNodeName: String): MostDistantNodesResult {
 }
 
 
-fun Graph.findRootNode(): Set<GraphNode> {
+fun Graph.findRootNodeCandidates(): Set<GraphNode> {
     if (nodes.isEmpty()) {
         return emptySet()
     }
