@@ -49,14 +49,8 @@ open class DrawModulesStructureTask : DefaultTask() {
         printModulesStructure(filteredNodes)
 
         val rootNode = getRootNode(graph)
-        val longestPaths = if (rootNode != null) {
-            val foundLongestPaths = graph.findLongestPaths(rootNode)
-            PrintingUtil.printLongestPathsInformation(rootNode, foundLongestPaths,
-                config.maxCriticalPathLength)
-            foundLongestPaths
-        } else {
-            emptyList()
-        }
+        val longestPaths = graph.findLongestPaths(rootNode)
+        printPathsInformation(rootNode, longestPaths)
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
@@ -111,7 +105,7 @@ open class DrawModulesStructureTask : DefaultTask() {
     private fun isFilterPassed(name: String) =
         filtersInput.any(name::contains)
 
-    private fun printModulesStructure(graphNodes: List<GraphNode>) {
+    fun printModulesStructure(graphNodes: List<GraphNode>) {
         println("Modules structure:")
         graphNodes.forEach { node ->
             println(node.name)
@@ -119,5 +113,10 @@ open class DrawModulesStructureTask : DefaultTask() {
                 .forEach { println("    $it") }
         }
         println()
+    }
+
+    private fun printPathsInformation(rootNode: String?, paths: List<List<GraphNode>>) {
+        rootNode ?: return
+        PrintingUtil.printLongestPathsInformation(rootNode, paths, config.maxCriticalPathLength)
     }
 }

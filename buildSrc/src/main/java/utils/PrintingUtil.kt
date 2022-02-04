@@ -4,12 +4,16 @@ import models.GraphNode
 
 object PrintingUtil {
 
+    private const val DIVIDER = "---------------------------------"
+
+    fun printDivider() = println(DIVIDER)
+
     fun printLongestPathsInformation(
         rootModule: String,
         paths: List<List<GraphNode>>,
         maxCriticalPathLength: Int?
     ) {
-        println("\nAmount of longest paths relative to \"$rootModule\" module: ${paths.size}")
+        println("Amount of longest paths relative to \"$rootModule\" module: ${paths.size}")
         paths.forEachIndexed { index, path ->
             val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
             println(pathStr)
@@ -21,7 +25,7 @@ object PrintingUtil {
 
         if (maxCriticalPathLength != null) {
             if (currentCriticalPathLength >= maxCriticalPathLength) {
-                println("Warning! The length of the longest path is more than the threshold " +
+                println("WARNING! The length of the longest path is more than the threshold " +
                         "value $maxCriticalPathLength!")
             }
         }
