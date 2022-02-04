@@ -1,6 +1,7 @@
 package tasks
 
 import extensions.findLongestPaths
+import extensions.findRootNodeCandidates
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
@@ -27,15 +28,11 @@ open class DrawModulesStructureTask : DefaultTask() {
 
     @set:Option(option = "rootModule", description = "root module for critical path")
     @get:Input
-    var rootModule: String = DEFAULT_ROOT_MODULE
+    var rootModule: String = ""
 
     @set:Option(option = "dep", description = "flag to draw all dependencies of modules")
     @get:Input
     var showModulesDependencies: Boolean = false
-
-    private companion object {
-        const val DEFAULT_ROOT_MODULE = ":app"
-    }
 
     @TaskAction
     fun run() {
@@ -46,12 +43,41 @@ open class DrawModulesStructureTask : DefaultTask() {
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 
-        val longestPaths = findLongestPaths(graph)
-        printLongestPaths(longestPaths)
+        val rootNode = getRootNode(graph)
+        val longestPaths = if (rootNode != null) {
+            val foundLongestPaths = findLongestPaths(graph, rootNode)
+            printLongestPaths(foundLongestPaths, rootNode)
+            foundLongestPaths
+        } else {
+            emptyList()
+        }
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
         GraphVizUtil.generateGraphImage(filteredGraph, longestPaths, imageFile)
+    }
+
+    private fun getRootNode(graph: Graph): String? {
+        if (rootModule.isNotEmpty()) {
+            return rootModule
+        }
+
+        val rootNodes = graph.findRootNodeCandidates()
+        return when {
+            rootNodes.isEmpty() -> {
+                println("The project doesn't has a root module")
+                null
+            }
+            rootNodes.size > 1 -> {
+                val msg = "The project has a few root modules. " +
+                        "You should set a root module: ${rootNodes.map { it.name }}"
+                println(msg)
+                null
+            }
+            else -> {
+                rootNodes.first().name
+            }
+        }
     }
 
     private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
@@ -89,7 +115,7 @@ open class DrawModulesStructureTask : DefaultTask() {
     }
 
 
-    private fun findLongestPaths(graph: Graph): List<List<GraphNode>> {
+    private fun findLongestPaths(graph: Graph, rootModule: String): List<List<GraphNode>> {
         return if (!shouldDrawCriticalPath) {
             listOf()
         } else {
@@ -97,12 +123,12 @@ open class DrawModulesStructureTask : DefaultTask() {
         }
     }
 
-    private fun printLongestPaths(paths: List<List<GraphNode>>) {
+    private fun printLongestPaths(paths: List<List<GraphNode>>, currentRootModule: String) {
         if (!shouldDrawCriticalPath) {
             return
         }
 
-        println("Amount of longest paths relative to \"$rootModule\" module: ${paths.size}")
+        println("Amount of longest paths relative to \"$currentRootModule\" module: ${paths.size}")
         paths.forEachIndexed { index, path ->
             val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
             println(pathStr)
