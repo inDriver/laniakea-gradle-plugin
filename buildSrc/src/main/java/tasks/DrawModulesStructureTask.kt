@@ -11,6 +11,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import utils.GraphVizUtil
 import utils.ImageFileUtil
+import utils.PrintingUtil
 
 // Default modules connections
 val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
@@ -51,7 +52,8 @@ open class DrawModulesStructureTask : DefaultTask() {
         printModulesStructure(filteredNodes)
 
         val longestPaths = graph.findLongestPaths(rootModule)
-        printCriticalPathInformation(longestPaths)
+        PrintingUtil.pringLongestPathsInformation(rootModule, longestPaths,
+            config.maxCriticalPathLength)
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
@@ -91,33 +93,5 @@ open class DrawModulesStructureTask : DefaultTask() {
                 .forEach { println("    $it") }
         }
         println()
-    }
-
-
-    private fun findLongestPaths(graph: Graph): List<List<GraphNode>> {
-        return if (!shouldDrawCriticalPath) {
-            listOf()
-        } else {
-            graph.findLongestPaths(rootModule)
-        }
-    }
-
-    private fun printCriticalPathInformation(paths: List<List<GraphNode>>) {
-        println("Amount of longest paths relative to \"$rootModule\" module: ${paths.size}")
-        paths.forEachIndexed { index, path ->
-            val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
-            println(pathStr)
-        }
-
-        val currentCriticalPathLength = paths.first().size - 1
-        println("\nThe length of the longest path relative to \"$rootModule\" module:" +
-                " $currentCriticalPathLength")
-
-        config.maxCriticalPathLength?.let { maxCriticalPathLength ->
-            if (currentCriticalPathLength >= maxCriticalPathLength) {
-                println("Warning! The length of the longest path is more than the threshold " +
-                        "value $maxCriticalPathLength!")
-            }
-        }
     }
 }

@@ -1,10 +1,10 @@
 import models.LaniakeaPluginConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import tasks.CheckCriticalPathTask
 import tasks.DrawModulesStructureTask
-import tasks.EmptyTask
+import tasks.TASK_CHECK_CRITICAL_PATH
 import tasks.TASK_DRAW_MODULES_STRUCTURE
-import tasks.TASK_RUN_EMPTY
 
 class LaniakeaPlugin : Plugin<Project> {
 
@@ -17,8 +17,11 @@ class LaniakeaPlugin : Plugin<Project> {
             .create(LANIAKEA_PLUGIN_EXTENSION_NAME, LaniakeaPluginConfig::class.java)
 
         target.afterEvaluate {
-            tasks.register(TASK_RUN_EMPTY, EmptyTask::class.java)
             tasks.register(TASK_DRAW_MODULES_STRUCTURE, DrawModulesStructureTask::class.java) {
+                config = laniakeaPluginConfig
+            }
+
+            tasks.register(TASK_CHECK_CRITICAL_PATH, CheckCriticalPathTask::class.java) {
                 config = laniakeaPluginConfig
             }
         }
