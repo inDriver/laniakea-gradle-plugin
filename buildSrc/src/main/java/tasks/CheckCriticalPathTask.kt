@@ -25,7 +25,8 @@ open class CheckCriticalPathTask : DefaultTask() {
         val rootModule = DEFAULT_ROOT_MODULE
         val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
         val longestPaths = graph.findLongestPaths(rootModule)
-        PrintingUtil.pringLongestPathsInformation(rootModule, longestPaths,
+        PrintingUtil.printLongestPathsInformation(rootModule, longestPaths,
             config.maxCriticalPathLength)
     }
 }
+

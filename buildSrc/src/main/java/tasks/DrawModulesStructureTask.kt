@@ -1,6 +1,7 @@
 package tasks
 
 import extensions.findLongestPaths
+import extensions.findRootNodeCandidates
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
@@ -29,7 +30,7 @@ open class DrawModulesStructureTask : DefaultTask() {
 
     @set:Option(option = "rootModule", description = "root module for critical path")
     @get:Input
-    var rootModule: String = DEFAULT_ROOT_MODULE
+    var rootModule: String = ""
 
     @set:Option(option = "dep", description = "flag to draw all dependencies of modules")
     @get:Input
@@ -37,10 +38,6 @@ open class DrawModulesStructureTask : DefaultTask() {
 
     @get:Input
     var config = LaniakeaPluginConfig()
-
-    private companion object {
-        const val DEFAULT_ROOT_MODULE = ":app"
-    }
 
     @TaskAction
     fun run() {
@@ -51,14 +48,43 @@ open class DrawModulesStructureTask : DefaultTask() {
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 
-        val longestPaths = graph.findLongestPaths(rootModule)
-        PrintingUtil.pringLongestPathsInformation(rootModule, longestPaths,
-            config.maxCriticalPathLength)
+        val rootNode = getRootNode(graph)
+        val longestPaths = if (rootNode != null) {
+            val foundLongestPaths = graph.findLongestPaths(rootNode)
+            PrintingUtil.printLongestPathsInformation(rootNode, foundLongestPaths,
+                config.maxCriticalPathLength)
+            foundLongestPaths
+        } else {
+            emptyList()
+        }
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
         val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
         GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
+    }
+
+    private fun getRootNode(graph: Graph): String? {
+        if (rootModule.isNotEmpty()) {
+            return rootModule
+        }
+
+        val rootNodes = graph.findRootNodeCandidates()
+        return when {
+            rootNodes.isEmpty() -> {
+                println("The project doesn't has a root module")
+                null
+            }
+            rootNodes.size > 1 -> {
+                val msg = "The project has a few root modules. " +
+                        "You should set a root module: ${rootNodes.map { it.name }}"
+                println(msg)
+                null
+            }
+            else -> {
+                rootNodes.first().name
+            }
+        }
     }
 
     private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {

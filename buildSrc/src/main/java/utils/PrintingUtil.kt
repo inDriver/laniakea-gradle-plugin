@@ -4,7 +4,7 @@ import models.GraphNode
 
 object PrintingUtil {
 
-    fun pringLongestPathsInformation(
+    fun printLongestPathsInformation(
         rootModule: String,
         paths: List<List<GraphNode>>,
         maxCriticalPathLength: Int?
