@@ -132,7 +132,7 @@ open class ProjectStatisticsTask : DefaultTask() {
 
 
     private fun createOutputFile(projectStatsModel: ProjectStatsModel): File {
-        val string = Json.encodeToString(projectStatsModel)
+        val projectStatsJson = Json.encodeToString(projectStatsModel)
 
         val outputDirectory = File("./${PROJECT_STATS_DIRECTORY}")
         if (!outputDirectory.exists()) {
@@ -145,7 +145,7 @@ open class ProjectStatisticsTask : DefaultTask() {
         val fileName = DEFAULT_STATS_FILE_NAME
         val filePath = "${outputDirectory.path}/$fileName-$fileName.json"
         return File(filePath).apply {
-            this.outputStream().write(string.encodeToByteArray())
+            this.outputStream().write(projectStatsJson.encodeToByteArray())
         }
 
     }
