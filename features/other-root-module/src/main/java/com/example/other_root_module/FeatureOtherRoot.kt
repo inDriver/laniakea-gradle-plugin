@@ -1,0 +1,3 @@
+package com.example.other_root_module
+
+object FeatureOtherRoot
