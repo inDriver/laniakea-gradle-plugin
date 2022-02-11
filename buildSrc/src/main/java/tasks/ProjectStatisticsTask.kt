@@ -90,15 +90,17 @@ open class ProjectStatisticsTask : DefaultTask() {
 
         fun countNodes(graph: Graph, rootNode: GraphNode) {
             rootNode.children.forEach { childName ->
-                graph
-                    .nodes
-                    .first { node ->
-                        node.name == childName
-                    }
-                    .let { node ->
-                        modulesSet.add(node.name)
-                        countNodes(graph, node)
-                    }
+                if (!modulesSet.contains(childName)) {
+                    graph
+                        .nodes
+                        .first { node ->
+                            node.name == childName
+                        }
+                        .let { node ->
+                            modulesSet.add(node.name)
+                            countNodes(graph, node)
+                        }
+                }
             }
         }
         countNodes(graph, rootNode)
