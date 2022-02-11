@@ -84,8 +84,9 @@ open class ProjectStatisticsTask : DefaultTask() {
     }
 
     private fun getGraphsNodesCount(graph: Graph, rootNode: GraphNode): Int {
-        // this one is root node
-        var nodesCount = 1
+
+        val modulesSet = mutableSetOf<String>()
+        modulesSet.add(rootNode.name)
 
         fun countNodes(graph: Graph, rootNode: GraphNode) {
             rootNode.children.forEach { childName ->
@@ -95,14 +96,14 @@ open class ProjectStatisticsTask : DefaultTask() {
                         node.name == childName
                     }
                     .let { node ->
-                        nodesCount++
+                        modulesSet.add(node.name)
                         countNodes(graph, node)
                     }
             }
         }
         countNodes(graph, rootNode)
 
-        return nodesCount
+        return modulesSet.size
     }
 
     private fun outputResults(projectStatsModel: ProjectStatsModel) {
