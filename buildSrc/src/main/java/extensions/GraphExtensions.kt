@@ -10,8 +10,8 @@ fun Graph.findNodeByName(name: String): GraphNode {
     return node ?: throw IllegalArgumentException("Graph has no node with name $name")
 }
 
-fun Graph.findLongestPaths(rootNodeName: String): List<List<GraphNode>> {
-    if (nodes.isEmpty()) {
+fun Graph.findLongestPaths(rootNodeName: String?): List<List<GraphNode>> {
+    if (nodes.isEmpty() || rootNodeName == null) {
         return emptyList()
     }
 

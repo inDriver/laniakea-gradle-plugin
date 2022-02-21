@@ -25,6 +25,10 @@ android {
     }
 }
 
+laniakeaPlugin {
+    maxCriticalPathLength = 3
+}
+
 dependencies {
     implementation project(':features:feature-1')
 
