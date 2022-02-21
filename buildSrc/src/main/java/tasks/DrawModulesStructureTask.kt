@@ -12,7 +12,6 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import utils.GraphVizUtil
 import utils.ImageFileUtil
-import utils.PrintingUtil
 
 // Default modules connections
 val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
@@ -50,7 +49,6 @@ open class DrawModulesStructureTask : DefaultTask() {
 
         val rootNode = getRootNode(graph)
         val longestPaths = graph.findLongestPaths(rootNode)
-        printPathsInformation(rootNode, longestPaths)
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
@@ -105,7 +103,7 @@ open class DrawModulesStructureTask : DefaultTask() {
     private fun isFilterPassed(name: String) =
         filtersInput.any(name::contains)
 
-    fun printModulesStructure(graphNodes: List<GraphNode>) {
+    private fun printModulesStructure(graphNodes: List<GraphNode>) {
         println("Modules structure:")
         graphNodes.forEach { node ->
             println(node.name)
@@ -113,10 +111,5 @@ open class DrawModulesStructureTask : DefaultTask() {
                 .forEach { println("    $it") }
         }
         println()
-    }
-
-    private fun printPathsInformation(rootNode: String?, paths: List<List<GraphNode>>) {
-        rootNode ?: return
-        PrintingUtil.printLongestPathsInformation(rootNode, paths, config.maxCriticalPathLength)
     }
 }
