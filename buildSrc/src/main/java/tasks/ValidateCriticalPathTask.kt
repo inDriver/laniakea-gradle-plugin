@@ -61,8 +61,9 @@ open class ValidateCriticalPathTask : DefaultTask() {
 
         if (maxCriticalPathLength != null) {
             if (currentCriticalPathLength >= maxCriticalPathLength) {
-                println("WARNING! The length of the longest path is more than the threshold " +
-                        "value $maxCriticalPathLength!")
+                val message = "WARNING! The length of the longest path is more than the threshold " +
+                        "value $maxCriticalPathLength!"
+                throw IllegalStateException(message)
             }
         }
     }
