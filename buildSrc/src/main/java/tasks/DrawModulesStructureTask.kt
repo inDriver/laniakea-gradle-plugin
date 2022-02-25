@@ -5,6 +5,7 @@ import extensions.findRootNodeCandidates
 import extensions.getParentToChildrenStructure
 import models.Graph
 import models.GraphNode
+import models.LaniakeaPluginConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -34,6 +35,9 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var showModulesDependencies: Boolean = false
 
+    @get:Input
+    var config = LaniakeaPluginConfig()
+
     @TaskAction
     fun run() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
@@ -44,17 +48,12 @@ open class DrawModulesStructureTask : DefaultTask() {
         printModulesStructure(filteredNodes)
 
         val rootNode = getRootNode(graph)
-        val longestPaths = if (rootNode != null) {
-            val foundLongestPaths = findLongestPaths(graph, rootNode)
-            printLongestPaths(foundLongestPaths, rootNode)
-            foundLongestPaths
-        } else {
-            emptyList()
-        }
+        val longestPaths = graph.findLongestPaths(rootNode)
 
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
-        GraphVizUtil.generateGraphImage(filteredGraph, longestPaths, imageFile)
+        val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
+        GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
     }
 
     private fun getRootNode(graph: Graph): String? {
@@ -110,28 +109,6 @@ open class DrawModulesStructureTask : DefaultTask() {
             println(node.name)
             node.children
                 .forEach { println("    $it") }
-        }
-        println()
-    }
-
-
-    private fun findLongestPaths(graph: Graph, rootModule: String): List<List<GraphNode>> {
-        return if (!shouldDrawCriticalPath) {
-            listOf()
-        } else {
-            graph.findLongestPaths(rootModule)
-        }
-    }
-
-    private fun printLongestPaths(paths: List<List<GraphNode>>, currentRootModule: String) {
-        if (!shouldDrawCriticalPath) {
-            return
-        }
-
-        println("Amount of longest paths relative to \"$currentRootModule\" module: ${paths.size}")
-        paths.forEachIndexed { index, path ->
-            val pathStr = "${index + 1}) ${path.joinToString(separator = " -> ") { it.name }}"
-            println(pathStr)
         }
         println()
     }

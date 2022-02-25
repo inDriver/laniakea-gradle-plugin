@@ -13,33 +13,12 @@ import java.io.File
 object GraphVizUtil {
 
     private const val GRAPH_NAME = "laniakea_graph"
-    private const val IMAGE_WIDTH = 5000
     private const val DRAW_ALL_PATHS = -1
-
-    fun generateGraphImage(graph: Graph, fileName: String) {
-        val graphFile = "$fileName.png"
-
-        val g: MutableGraph = Factory.mutGraph(graphFile)
-            .setDirected(true)
-            .use { _, _ ->
-                graph.nodes
-                    .forEach { node ->
-                        val parentNode = Factory.mutNode(node.name)
-                        node.children.forEach { child ->
-                            parentNode.addLink(Factory.mutNode(child))
-                        }
-                    }
-            }
-        Graphviz.fromGraph(g)
-            .width(IMAGE_WIDTH)
-            .render(Format.PNG)
-            .toFile(File(graphFile))
-    }
 
     fun generateGraphImage(
         graph: Graph,
-        longestPaths: List<List<GraphNode>> = emptyList(),
         imageFile: File,
+        longestPaths: List<List<GraphNode>>,
         pathNumberToHighlight: Int = DRAW_ALL_PATHS
     ) {
         val graphPairs = convertGraphToPairs(graph)
@@ -65,7 +44,6 @@ object GraphVizUtil {
         }
 
         Graphviz.fromGraph(mutableGraph)
-            .width(IMAGE_WIDTH)
             .render(Format.PNG)
             .toFile(imageFile)
     }
