@@ -3,44 +3,20 @@ package tasks
 import extensions.findLongestPaths
 import extensions.findRootNodeCandidates
 import extensions.getParentToChildrenStructure
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import models.Graph
 import models.GraphNode
+import models.GraphStatsModel
+import models.ProjectStatsModel
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import java.io.File
 
 
-const val TASK_PROJECT_STATISTICS = "projectStats"
-private const val PROJECT_STATS_DIRECTORY = "projectStats"
+const val TASK_PROJECT_STATISTICS = "projectModulesStats"
+private const val PROJECT_STATS_DIRECTORY = "projectModulesStats"
 private const val DEFAULT_STATS_FILE_NAME = "stats"
-
-@Serializable
-data class ProjectStatsModel(
-    @SerialName("modules_count")
-    val modulesCount: Int,
-    @SerialName("independent_graphs_count")
-    val independentGraphsCount: Int,
-    @SerialName("graphs_stats")
-    val graphsStats: ArrayList<GraphStatsModel> = arrayListOf(),
-    @SerialName("unused_modules")
-    val unusedModulesNames: ArrayList<String> = arrayListOf()
-)
-
-@Serializable
-data class GraphStatsModel(
-    @SerialName("root_name")
-    val rootNodeName: String,
-    @SerialName("modules_count")
-    val graphNodesCount: Int,
-    @SerialName("longest_path_length")
-    val longestPathLength: Int,
-    @SerialName("longest_paths_count")
-    val longestPathsCount: Int
-)
 
 open class ProjectStatisticsTask : DefaultTask() {
 
@@ -146,7 +122,7 @@ open class ProjectStatisticsTask : DefaultTask() {
         }
 
         val fileName = DEFAULT_STATS_FILE_NAME
-        val filePath = "${outputDirectory.path}/$fileName-$fileName.json"
+        val filePath = "${outputDirectory.path}/$fileName.json"
         return File(filePath).apply {
             this.outputStream().write(projectStatsJson.encodeToByteArray())
         }
