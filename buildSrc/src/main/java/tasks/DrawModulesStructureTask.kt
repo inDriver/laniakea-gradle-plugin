@@ -12,9 +12,9 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import utils.GraphVizUtil
 import utils.ImageFileUtil
+import utils.PluginUtils
 
 // Default modules connections
-val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
 const val TASK_DRAW_MODULES_STRUCTURE = "drawModules"
 
 open class DrawModulesStructureTask : DefaultTask() {
@@ -43,7 +43,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
         println("Registered filters: $filtersInput\n")
 
-        val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
+        val graph = project.getParentToChildrenStructure(PluginUtils.DEFAULT_CONFIGURATIONS)
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
         printModulesStructure(filteredNodes)
 

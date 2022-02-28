@@ -11,18 +11,17 @@ import models.GraphStatsModel
 import models.ProjectStatsModel
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
+import utils.PluginUtils
 import java.io.File
 
-
-const val TASK_PROJECT_STATISTICS = "projectModulesStats"
-private const val PROJECT_STATS_DIRECTORY = "projectModulesStats"
+const val TASK_PROJECT_MODULES_STATISTICS = "generateProjectModulesStats"
 private const val DEFAULT_STATS_FILE_NAME = "stats"
 
 open class ProjectStatisticsTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        val graph = project.getParentToChildrenStructure(setOf("api", "implementation"))
+        val graph = project.getParentToChildrenStructure(PluginUtils.DEFAULT_CONFIGURATIONS)
 
         val modulesCount = graph.nodes.size
         val rootNodes = graph.findRootNodeCandidates()
@@ -33,12 +32,8 @@ open class ProjectStatisticsTask : DefaultTask() {
         )
 
         rootNodes.forEach { rootNode ->
-            if (rootNode.children.isEmpty()) {
-                projectStatsModel.unusedModulesNames.add(rootNode.name)
-            } else {
-                val graphStatsModel = getGraphStats(graph, rootNode)
-                projectStatsModel.graphsStats.add(graphStatsModel)
-            }
+            val graphStatsModel = getGraphStats(graph, rootNode)
+            projectStatsModel.graphsStats.add(graphStatsModel)
         }
 
         outputResults(projectStatsModel)
@@ -95,7 +90,6 @@ open class ProjectStatisticsTask : DefaultTask() {
         with(projectStatsModel) {
             println("project modules count: $modulesCount")
             println("independent graphs count: $independentGraphsCount")
-            println("unused modules in project: $unusedModulesNames")
             println("independent graph stats:")
             graphsStats.forEach { graphStatsModel ->
                 with(graphStatsModel) {
@@ -113,9 +107,12 @@ open class ProjectStatisticsTask : DefaultTask() {
     private fun createOutputFile(projectStatsModel: ProjectStatsModel): File {
         val projectStatsJson = Json.encodeToString(projectStatsModel)
 
-        val outputDirectory = File("./${PROJECT_STATS_DIRECTORY}")
+        val outputDirectory = File(
+            System.getProperty("user.dir") +
+                    "/${PluginUtils.LANIAKEA_DIRECTORY}/${PluginUtils.GRAPH_MODULES_STATS_DIRECTORY}"
+        )
         if (!outputDirectory.exists()) {
-            val isOutputDirectoryCreated = outputDirectory.mkdir()
+            val isOutputDirectoryCreated = outputDirectory.mkdirs()
             if (!isOutputDirectoryCreated) {
                 throw IllegalStateException("Can't create directory for project stats!")
             }

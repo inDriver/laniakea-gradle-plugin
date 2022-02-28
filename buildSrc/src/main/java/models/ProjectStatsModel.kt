@@ -10,7 +10,5 @@ data class ProjectStatsModel(
     @SerialName("independent_graphs_count")
     val independentGraphsCount: Int,
     @SerialName("graphs_stats")
-    val graphsStats: ArrayList<GraphStatsModel> = arrayListOf(),
-    @SerialName("unused_modules")
-    val unusedModulesNames: ArrayList<String> = arrayListOf()
+    val graphsStats: ArrayList<GraphStatsModel> = arrayListOf()
 )
