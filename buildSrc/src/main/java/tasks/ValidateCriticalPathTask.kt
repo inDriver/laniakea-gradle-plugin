@@ -9,6 +9,7 @@ import models.LaniakeaPluginConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import utils.PluginUtils
 
 const val TASK_VALIDATE_CRITICAL_PATH = "validateCriticalPath"
 
@@ -21,7 +22,7 @@ open class ValidateCriticalPathTask : DefaultTask() {
     fun run() {
         println("Running $TASK_VALIDATE_CRITICAL_PATH")
         printDivider()
-        val graph = project.getParentToChildrenStructure(DEFAULT_CONFIGURATIONS)
+        val graph = project.getParentToChildrenStructure(PluginUtils.DEFAULT_CONFIGURATIONS)
         val rootNodes = graph.findRootNodeCandidates()
         printPathsInfo(graph, rootNodes)
     }

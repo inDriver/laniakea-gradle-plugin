@@ -8,7 +8,6 @@ import java.util.Date
 
 object ImageFileUtil {
 
-    private const val GRAPH_IMAGES_DIRECTORY = "laniakeaImages"
     private const val DEFAULT_IMAGE_FILE_NAME = "graph"
     private const val MAX_FILTER_AMOUNT_IN_FILE_NAME = 4
 
@@ -17,9 +16,12 @@ object ImageFileUtil {
     }
 
     fun creteImageFile(filters: List<String>): File {
-        val imageDirectory = File("./$GRAPH_IMAGES_DIRECTORY")
+        val imageDirectory = File(
+            System.getProperty("user.dir") +
+                    "/${PluginUtils.LANIAKEA_DIRECTORY}/${PluginUtils.GRAPH_IMAGES_DIRECTORY}"
+        )
         if (!imageDirectory.exists()) {
-            val isImageDirectoryCreated = imageDirectory.mkdir()
+            val isImageDirectoryCreated = imageDirectory.mkdirs()
             if (!isImageDirectoryCreated) {
                 throw IllegalStateException("Can't create directory for laniakea images!")
             }

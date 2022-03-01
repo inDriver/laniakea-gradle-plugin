@@ -1,10 +1,12 @@
 import models.LaniakeaPluginConfig
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import tasks.ValidateCriticalPathTask
 import tasks.DrawModulesStructureTask
-import tasks.TASK_VALIDATE_CRITICAL_PATH
+import tasks.ProjectStatisticsTask
+import tasks.ValidateCriticalPathTask
 import tasks.TASK_DRAW_MODULES_STRUCTURE
+import tasks.TASK_PROJECT_MODULES_STATISTICS
+import tasks.TASK_VALIDATE_CRITICAL_PATH
 
 class LaniakeaPlugin : Plugin<Project> {
 
@@ -24,6 +26,7 @@ class LaniakeaPlugin : Plugin<Project> {
             tasks.register(TASK_VALIDATE_CRITICAL_PATH, ValidateCriticalPathTask::class.java) {
                 config = laniakeaPluginConfig
             }
+            tasks.register(TASK_PROJECT_MODULES_STATISTICS, ProjectStatisticsTask::class.java)
         }
     }
 }
