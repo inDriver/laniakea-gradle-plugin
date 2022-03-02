@@ -1,7 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
-    id 'com.indriver.laniakea.plugin'
+    //id 'com.indriver.laniakea.plugin'
 }
 
 android {
@@ -25,9 +25,9 @@ android {
     }
 }
 
-laniakeaPlugin {
-    maxCriticalPathLength = 3
-}
+//laniakeaPlugin {
+//    maxCriticalPathLength = 3
+//}
 
 dependencies {
     implementation project(':features:feature-1')
