@@ -1,12 +1,12 @@
-package utils
+package com.indriver.laniakea.utils
 
 import guru.nidi.graphviz.attribute.Color
 import guru.nidi.graphviz.engine.Format
 import guru.nidi.graphviz.engine.Graphviz
 import guru.nidi.graphviz.model.Factory
 import guru.nidi.graphviz.model.MutableGraph
-import models.Graph
-import models.GraphNode
+import com.indriver.laniakea.models.Graph
+import com.indriver.laniakea.models.GraphNode
 import java.io.File
 
 

@@ -1,8 +1,8 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.5.21'
+    id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'java-gradle-plugin'
-    id("com.github.johnrengelman.shadow") version "7.0.0" // ./gradlew shadowJar
-
+    id("com.github.johnrengelman.shadow") version "7.0.0" // ./gradlew shadowJar will generate jar in build/libs/
+    id 'org.jetbrains.kotlin.plugin.serialization' version "1.6.10"
 }
 
 group 'com.indriver'
@@ -13,12 +13,12 @@ repositories {
 }
 
 gradlePlugin {
-//    plugins {
-//        simplePlugin {
-//            id = "com.indriver.laniakea.plugin"
-//            implementationClass = 'com.indriver.laniakea.LaniakeaPlugin'
-//        }
-//    }
+    plugins {
+        simplePlugin {
+            id = "com.indriver.laniakea.plugin"
+            implementationClass = 'com.indriver.laniakea.LaniakeaPlugin'
+        }
+    }
 }
 
 // https://imperceptiblethoughts.com/shadow/configuration/minimizing/
@@ -30,4 +30,5 @@ dependencies {
     implementation gradleApi()
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation("guru.nidi:graphviz-java-all-j2v8:0.18.1") // https://github.com/nidi3/graphviz-java
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.1")
 }

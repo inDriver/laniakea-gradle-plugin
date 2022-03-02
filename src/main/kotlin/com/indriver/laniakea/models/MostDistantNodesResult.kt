@@ -1,4 +1,4 @@
-package models
+package com.indriver.laniakea.models
 
 data class MostDistantNodesResult(
     val maxDistanceInNodes: Int,

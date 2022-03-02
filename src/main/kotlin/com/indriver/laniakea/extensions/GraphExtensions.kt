@@ -1,8 +1,8 @@
-package extensions
+package com.indriver.laniakea.extensions
 
-import models.Graph
-import models.GraphNode
-import models.MostDistantNodesResult
+import com.indriver.laniakea.models.Graph
+import com.indriver.laniakea.models.GraphNode
+import com.indriver.laniakea.models.MostDistantNodesResult
 import java.lang.IllegalArgumentException
 
 fun Graph.findNodeByName(name: String): GraphNode {

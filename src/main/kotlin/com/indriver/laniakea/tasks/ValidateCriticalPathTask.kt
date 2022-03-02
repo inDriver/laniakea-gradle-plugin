@@ -1,15 +1,15 @@
-package tasks
+package com.indriver.laniakea.tasks
 
-import extensions.findLongestPaths
-import extensions.findRootNodeCandidates
-import extensions.getParentToChildrenStructure
-import models.Graph
-import models.GraphNode
-import models.LaniakeaPluginConfig
+import com.indriver.laniakea.extensions.findLongestPaths
+import com.indriver.laniakea.extensions.findRootNodeCandidates
+import com.indriver.laniakea.extensions.getParentToChildrenStructure
+import com.indriver.laniakea.models.Graph
+import com.indriver.laniakea.models.GraphNode
+import com.indriver.laniakea.models.LaniakeaPluginConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
-import utils.PluginUtils
+import com.indriver.laniakea.utils.PluginUtils
 
 const val TASK_VALIDATE_CRITICAL_PATH = "validateCriticalPath"
 
