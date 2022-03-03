@@ -1,4 +1,5 @@
 plugins {
+    id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'java-gradle-plugin'
     id("com.github.johnrengelman.shadow") version "7.0.0" // ./gradlew shadowJar will generate jar in build/libs/
@@ -6,7 +7,22 @@ plugins {
 }
 
 group 'com.indriver'
-version '0.1.1'
+version '0.0.1'
+
+// For publishing use ./gradlew publish
+publishing {
+    repositories {
+        maven {
+            url myMavenRepoWriteUrl
+        }
+    }
+
+    publications {
+        maven(MavenPublication) {
+            from components.java
+        }
+    }
+}
 
 repositories {
     mavenCentral()
