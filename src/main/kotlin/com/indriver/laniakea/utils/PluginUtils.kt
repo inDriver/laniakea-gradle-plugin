@@ -1,4 +1,4 @@
-package utils
+package com.indriver.laniakea.utils
 
 object PluginUtils {
 

@@ -1,7 +1,7 @@
-package extensions
+package com.indriver.laniakea.extensions
 
-import models.Graph
-import models.GraphNode
+import com.indriver.laniakea.models.Graph
+import com.indriver.laniakea.models.GraphNode
 import org.gradle.api.Project
 import org.gradle.api.internal.artifacts.dependencies.DefaultProjectDependency
 

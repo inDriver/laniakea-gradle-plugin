@@ -1,17 +1,17 @@
-package tasks
+package com.indriver.laniakea.tasks
 
-import extensions.findLongestPaths
-import extensions.findRootNodeCandidates
-import extensions.getParentToChildrenStructure
+import com.indriver.laniakea.extensions.findLongestPaths
+import com.indriver.laniakea.extensions.findRootNodeCandidates
+import com.indriver.laniakea.extensions.getParentToChildrenStructure
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import models.Graph
-import models.GraphNode
-import models.GraphStatsModel
-import models.ProjectStatsModel
+import com.indriver.laniakea.models.Graph
+import com.indriver.laniakea.models.GraphNode
+import com.indriver.laniakea.models.GraphStatsModel
+import com.indriver.laniakea.models.ProjectStatsModel
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import utils.PluginUtils
+import com.indriver.laniakea.utils.PluginUtils
 import java.io.File
 
 const val TASK_PROJECT_MODULES_STATISTICS = "generateProjectModulesStats"
