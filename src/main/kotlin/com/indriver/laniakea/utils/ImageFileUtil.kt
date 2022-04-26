@@ -12,7 +12,7 @@ object ImageFileUtil {
     private const val MAX_FILTER_AMOUNT_IN_FILE_NAME = 4
 
     private val dateFormatter by lazy {
-        SimpleDateFormat("ddMM-HHmmss", Locale.getDefault())
+        SimpleDateFormat("dd.MM.yy-HH:mm:ss", Locale.getDefault())
     }
 
     fun creteImageFile(filters: List<String>): File {
@@ -36,7 +36,7 @@ object ImageFileUtil {
                 }
         }
         val timestamp = dateFormatter.format(Date().time)
-        val filePath = "${imageDirectory.path}/$fileName-$timestamp.png"
+        val filePath = "${imageDirectory.path}/$timestamp-$fileName.png"
         return File(filePath)
     }
 }
