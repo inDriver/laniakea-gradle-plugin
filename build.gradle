@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'com.indriver'
-version '0.0.2'
+version '0.0.4'
 
 // For publishing update plugin versions and use ./gradlew publish
 publishing {
