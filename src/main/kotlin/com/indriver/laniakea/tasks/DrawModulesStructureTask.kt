@@ -13,6 +13,7 @@ import org.gradle.api.tasks.options.Option
 import com.indriver.laniakea.utils.GraphVizUtil
 import com.indriver.laniakea.utils.ImageFileUtil
 import com.indriver.laniakea.utils.PluginUtils
+import java.io.File
 
 // Default modules connections
 const val TASK_DRAW_MODULES_STRUCTURE = "drawModules"
@@ -54,6 +55,7 @@ open class DrawModulesStructureTask : DefaultTask() {
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
         val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
         GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
+        printImageFilePath(imageFile)
     }
 
     private fun getRootNode(graph: Graph): String? {
@@ -111,5 +113,10 @@ open class DrawModulesStructureTask : DefaultTask() {
                 .forEach { println("    $it") }
         }
         println()
+    }
+
+    private fun printImageFilePath(file: File) {
+        println("Image file path:")
+        println(file.absolutePath)
     }
 }
