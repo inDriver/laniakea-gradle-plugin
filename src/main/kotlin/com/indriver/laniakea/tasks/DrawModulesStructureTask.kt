@@ -47,12 +47,14 @@ open class DrawModulesStructureTask : DefaultTask() {
         val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
 
-        val rootNode = getRootNode(graph)
-        val longestPaths = graph.findLongestPaths(rootNode)
-
         val filteredGraph = Graph(filteredNodes)
         val imageFile = ImageFileUtil.creteImageFile(filtersInput)
-        val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
+        val longestPathsToDraw = if (shouldDrawCriticalPath)  {
+            val rootNode = getRootNode(graph)
+            graph.findLongestPaths(rootNode)
+        } else {
+            emptyList()
+        }
         GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
         printImageFilePath(imageFile)
     }
