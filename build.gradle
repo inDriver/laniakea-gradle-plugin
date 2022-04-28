@@ -7,9 +7,9 @@ plugins {
 }
 
 group 'com.indriver'
-version '0.0.1'
+version '0.0.2'
 
-// For publishing use ./gradlew publish
+// For publishing update plugin versions and use ./gradlew publish
 publishing {
     repositories {
         maven {
