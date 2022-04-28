@@ -36,6 +36,10 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var showModulesDependencies: Boolean = false
 
+    @set:Option(option = "dot", description = "use this flag is you want to create dot file instead of png")
+    @get:Input
+    var shouldUseDotFormat: Boolean = false
+
     @get:Input
     var config = LaniakeaPluginConfig()
 
@@ -52,10 +56,11 @@ open class DrawModulesStructureTask : DefaultTask() {
         val longestPaths = graph.findLongestPaths(rootNode)
 
         val filteredGraph = Graph(filteredNodes)
-        val fileType = FileUtil.FileType.PNG // update here
+        val fileType = getImageFileType()
         val imageFile = FileUtil.creteImageFile(filtersInput, fileType)
         val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
-        GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
+
+        GraphVizUtil.generateGraphImage(filteredGraph, longestPathsToDraw, imageFile, fileType)
         printImageFilePath(imageFile)
     }
 
@@ -105,6 +110,14 @@ open class DrawModulesStructureTask : DefaultTask() {
 
     private fun isFilterPassed(name: String) =
         filtersInput.any(name::contains)
+
+    private fun getImageFileType(): FileUtil.FileType {
+        return if (shouldUseDotFormat) {
+            FileUtil.FileType.DOT
+        } else {
+            FileUtil.FileType.PNG
+        }
+    }
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
         println("Modules structure:")

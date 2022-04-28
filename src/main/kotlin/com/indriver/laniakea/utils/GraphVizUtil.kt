@@ -9,7 +9,6 @@ import com.indriver.laniakea.models.Graph
 import com.indriver.laniakea.models.GraphNode
 import java.io.File
 
-
 object GraphVizUtil {
 
     private const val GRAPH_NAME = "laniakea_graph"
@@ -17,8 +16,9 @@ object GraphVizUtil {
 
     fun generateGraphImage(
         graph: Graph,
-        imageFile: File,
         longestPaths: List<List<GraphNode>>,
+        imageFile: File,
+        imageFileType: FileUtil.FileType,
         pathNumberToHighlight: Int = DRAW_ALL_PATHS
     ) {
         val graphPairs = convertGraphToPairs(graph)
@@ -43,8 +43,9 @@ object GraphVizUtil {
             mutableGraph.add(firstNode)
         }
 
+        val graphVizFileFormat = convertFileTypeToGraphvizFormat(imageFileType)
         Graphviz.fromGraph(mutableGraph)
-            .render(Format.PNG)
+            .render(graphVizFileFormat)
             .toFile(imageFile)
     }
 
@@ -94,5 +95,12 @@ object GraphVizUtil {
             }
         }
         return pairs.toSet()
+    }
+
+    private fun convertFileTypeToGraphvizFormat(fileType: FileUtil.FileType): Format {
+        return when (fileType) {
+            FileUtil.FileType.PNG -> Format.PNG
+            FileUtil.FileType.DOT -> Format.DOT
+        }
     }
 }
