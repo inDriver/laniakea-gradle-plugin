@@ -18,7 +18,7 @@ object ImageFileUtil {
     fun creteImageFile(filters: List<String>): File {
         val imageDirectory = File(
             System.getProperty("user.dir") +
-                    "/${PluginUtils.LANIAKEA_DIRECTORY}/${PluginUtils.GRAPH_IMAGES_DIRECTORY}"
+                    "/${PluginConstants.LANIAKEA_DIRECTORY}/${PluginConstants.GRAPH_IMAGES_DIRECTORY}"
         )
         if (!imageDirectory.exists()) {
             val isImageDirectoryCreated = imageDirectory.mkdirs()

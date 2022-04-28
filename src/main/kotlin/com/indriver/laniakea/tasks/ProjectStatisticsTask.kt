@@ -11,7 +11,7 @@ import com.indriver.laniakea.models.GraphStats
 import com.indriver.laniakea.models.ProjectStats
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
-import com.indriver.laniakea.utils.PluginUtils
+import com.indriver.laniakea.utils.PluginConstants
 import java.io.File
 
 const val TASK_PROJECT_MODULES_STATISTICS = "generateProjectModulesStats"
@@ -21,7 +21,8 @@ open class ProjectStatisticsTask : DefaultTask() {
 
     @TaskAction
     fun run() {
-        val graph = project.getParentToChildrenStructure(PluginUtils.DEFAULT_CONFIGURATIONS)
+        println("Running $TASK_PROJECT_MODULES_STATISTICS")
+        val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)
 
         val modulesCount = graph.nodes.size
         val rootNodes = graph.findRootNodeCandidates()
@@ -86,11 +87,10 @@ open class ProjectStatisticsTask : DefaultTask() {
 
     private fun printResults(projectStats: ProjectStats) {
         println("Project statistics:")
-
         with(projectStats) {
-            println("project modules count: $modulesCount")
-            println("independent graphs count: $independentGraphsCount")
-            println("independent graph stats:")
+            println("   project modules count: $modulesCount")
+            println("   independent graphs count: $independentGraphsCount")
+            println("Independent graph stats:")
             graphsStats.forEach { graphStatsModel ->
                 with(graphStatsModel) {
                     println()
@@ -103,13 +103,12 @@ open class ProjectStatisticsTask : DefaultTask() {
         }
     }
 
-
     private fun createOutputFile(projectStats: ProjectStats): File {
         val projectStatsJson = Json.encodeToString(projectStats)
 
         val outputDirectory = File(
             System.getProperty("user.dir") +
-                    "/${PluginUtils.LANIAKEA_DIRECTORY}/${PluginUtils.GRAPH_MODULES_STATS_DIRECTORY}"
+                    "/${PluginConstants.LANIAKEA_DIRECTORY}/${PluginConstants.GRAPH_MODULES_STATS_DIRECTORY}"
         )
         if (!outputDirectory.exists()) {
             val isOutputDirectoryCreated = outputDirectory.mkdirs()

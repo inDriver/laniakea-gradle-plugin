@@ -12,7 +12,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import com.indriver.laniakea.utils.GraphVizUtil
 import com.indriver.laniakea.utils.ImageFileUtil
-import com.indriver.laniakea.utils.PluginUtils
+import com.indriver.laniakea.utils.PluginConstants
 
 // Default modules connections
 const val TASK_DRAW_MODULES_STRUCTURE = "drawModules"
@@ -43,9 +43,8 @@ open class DrawModulesStructureTask : DefaultTask() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")
         println("Registered filters: $filtersInput\n")
 
-        val graph = project.getParentToChildrenStructure(PluginUtils.DEFAULT_CONFIGURATIONS)
+        val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
-        printModulesStructure(filteredNodes)
 
         val rootNode = getRootNode(graph)
         val longestPaths = graph.findLongestPaths(rootNode)
