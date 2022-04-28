@@ -7,8 +7,8 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.indriver.laniakea.models.Graph
 import com.indriver.laniakea.models.GraphNode
-import com.indriver.laniakea.models.GraphStatsModel
-import com.indriver.laniakea.models.ProjectStatsModel
+import com.indriver.laniakea.models.GraphStats
+import com.indriver.laniakea.models.ProjectStats
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import com.indriver.laniakea.utils.PluginUtils
@@ -26,7 +26,7 @@ open class ProjectStatisticsTask : DefaultTask() {
         val modulesCount = graph.nodes.size
         val rootNodes = graph.findRootNodeCandidates()
 
-        val projectStatsModel = ProjectStatsModel(
+        val projectStatsModel = ProjectStats(
             modulesCount = modulesCount,
             independentGraphsCount = rootNodes.size
         )
@@ -39,14 +39,14 @@ open class ProjectStatisticsTask : DefaultTask() {
         outputResults(projectStatsModel)
     }
 
-    private fun getGraphStats(graph: Graph, rootNode: GraphNode): GraphStatsModel {
+    private fun getGraphStats(graph: Graph, rootNode: GraphNode): GraphStats {
         val graphNodesCount = getGraphsNodesCount(graph, rootNode)
 
         val longestPaths = graph.findLongestPaths(rootNode.name)
         val longestPathLength = longestPaths.first().size
         val longestPathsSize = longestPaths.size
 
-        return GraphStatsModel(
+        return GraphStats(
             rootNode.name,
             graphNodesCount,
             longestPathLength,
@@ -79,15 +79,15 @@ open class ProjectStatisticsTask : DefaultTask() {
         return modulesSet.size
     }
 
-    private fun outputResults(projectStatsModel: ProjectStatsModel) {
-        printResults(projectStatsModel)
-        createOutputFile(projectStatsModel)
+    private fun outputResults(projectStats: ProjectStats) {
+        printResults(projectStats)
+        createOutputFile(projectStats)
     }
 
-    private fun printResults(projectStatsModel: ProjectStatsModel) {
+    private fun printResults(projectStats: ProjectStats) {
         println("Project statistics:")
 
-        with(projectStatsModel) {
+        with(projectStats) {
             println("project modules count: $modulesCount")
             println("independent graphs count: $independentGraphsCount")
             println("independent graph stats:")
@@ -104,8 +104,8 @@ open class ProjectStatisticsTask : DefaultTask() {
     }
 
 
-    private fun createOutputFile(projectStatsModel: ProjectStatsModel): File {
-        val projectStatsJson = Json.encodeToString(projectStatsModel)
+    private fun createOutputFile(projectStats: ProjectStats): File {
+        val projectStatsJson = Json.encodeToString(projectStats)
 
         val outputDirectory = File(
             System.getProperty("user.dir") +
