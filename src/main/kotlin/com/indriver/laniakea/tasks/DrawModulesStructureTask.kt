@@ -11,7 +11,7 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.options.Option
 import com.indriver.laniakea.utils.GraphVizUtil
-import com.indriver.laniakea.utils.ImageFileUtil
+import com.indriver.laniakea.utils.FileUtil
 import com.indriver.laniakea.utils.PluginConstants
 import java.io.File
 
@@ -36,6 +36,10 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var showModulesDependencies: Boolean = false
 
+    @set:Option(option = "dot", description = "use this flag is you want to create dot file instead of png")
+    @get:Input
+    var shouldUseDotFormat: Boolean = false
+
     @get:Input
     var config = LaniakeaPluginConfig()
 
@@ -48,14 +52,16 @@ open class DrawModulesStructureTask : DefaultTask() {
         val filteredNodes = filterNodesIfNeeded(graph.nodes)
 
         val filteredGraph = Graph(filteredNodes)
-        val imageFile = ImageFileUtil.creteImageFile(filtersInput)
+        val fileType = getImageFileType()
+        val imageFile = FileUtil.createImageFile(filtersInput, fileType)
         val longestPathsToDraw = if (shouldDrawCriticalPath)  {
             val rootNode = getRootNode(graph)
             graph.findLongestPaths(rootNode)
         } else {
             emptyList()
         }
-        GraphVizUtil.generateGraphImage(filteredGraph, imageFile, longestPathsToDraw)
+
+        GraphVizUtil.generateGraphImage(filteredGraph, longestPathsToDraw, imageFile, fileType)
         printImageFilePath(imageFile)
     }
 
@@ -105,6 +111,14 @@ open class DrawModulesStructureTask : DefaultTask() {
 
     private fun isFilterPassed(name: String) =
         filtersInput.any(name::contains)
+
+    private fun getImageFileType(): FileUtil.FileType {
+        return if (shouldUseDotFormat) {
+            FileUtil.FileType.DOT
+        } else {
+            FileUtil.FileType.PNG
+        }
+    }
 
     private fun printModulesStructure(graphNodes: List<GraphNode>) {
         println("Modules structure:")
