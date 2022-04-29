@@ -9,7 +9,7 @@ import com.indriver.laniakea.models.LaniakeaPluginConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
-import com.indriver.laniakea.utils.PluginUtils
+import com.indriver.laniakea.utils.PluginConstants
 
 const val TASK_VALIDATE_CRITICAL_PATH = "validateCriticalPath"
 
@@ -21,8 +21,9 @@ open class ValidateCriticalPathTask : DefaultTask() {
     @TaskAction
     fun run() {
         println("Running $TASK_VALIDATE_CRITICAL_PATH")
+        println("Registered max critical path length is: ${config.maxCriticalPathLength}")
         printDivider()
-        val graph = project.getParentToChildrenStructure(PluginUtils.DEFAULT_CONFIGURATIONS)
+        val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)
         val rootNodes = graph.findRootNodeCandidates()
         printPathsInfo(graph, rootNodes)
     }
@@ -71,4 +72,3 @@ open class ValidateCriticalPathTask : DefaultTask() {
 
     private fun printDivider() = println("---------------------------------")
 }
-
