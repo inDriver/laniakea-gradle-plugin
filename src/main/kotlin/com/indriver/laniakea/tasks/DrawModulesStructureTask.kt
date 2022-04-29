@@ -57,7 +57,7 @@ open class DrawModulesStructureTask : DefaultTask() {
 
         val filteredGraph = Graph(filteredNodes)
         val fileType = getImageFileType()
-        val imageFile = FileUtil.creteImageFile(filtersInput, fileType)
+        val imageFile = FileUtil.createImageFile(filtersInput, fileType)
         val longestPathsToDraw = if (shouldDrawCriticalPath) longestPaths else emptyList()
 
         GraphVizUtil.generateGraphImage(filteredGraph, longestPathsToDraw, imageFile, fileType)

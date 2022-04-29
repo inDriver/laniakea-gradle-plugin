@@ -15,7 +15,7 @@ object FileUtil {
         SimpleDateFormat("dd.MM.yy-HH.mm.ss", Locale.getDefault())
     }
 
-    fun creteImageFile(filters: List<String>, fileType: FileType): File {
+    fun createImageFile(filters: List<String>, fileType: FileType): File {
         val fileDirectory = File(
             System.getProperty("user.dir") +
                     "/${PluginUtils.LANIAKEA_DIRECTORY}/${fileType.fileDirectory}"
