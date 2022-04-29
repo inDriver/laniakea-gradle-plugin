@@ -88,8 +88,8 @@ open class ProjectStatisticsTask : DefaultTask() {
     private fun printResults(projectStats: ProjectStats) {
         println("Project statistics:")
         with(projectStats) {
-            println("   project modules count: $modulesCount")
-            println("   independent graphs count: $independentGraphsCount")
+            println("\tproject modules count: $modulesCount")
+            println("\tindependent graphs count: $independentGraphsCount")
             println("Independent graph stats:")
             graphsStats.forEach { graphStatsModel ->
                 with(graphStatsModel) {
