@@ -18,7 +18,7 @@ object FileUtil {
     fun createImageFile(filters: List<String>, fileType: FileType): File {
         val fileDirectory = File(
             System.getProperty("user.dir") +
-                    "/${PluginUtils.LANIAKEA_DIRECTORY}/${fileType.fileDirectory}"
+                    "/${PluginConstants.LANIAKEA_DIRECTORY}/${fileType.fileDirectory}"
         )
         if (!fileDirectory.exists()) {
             val isFileDirectoryCreated = fileDirectory.mkdirs()
@@ -41,7 +41,7 @@ object FileUtil {
     }
 
     enum class FileType(val type: String, val fileDirectory: String) {
-        PNG(".png", PluginUtils.GRAPH_IMAGES_DIRECTORY),
-        DOT(".dot", PluginUtils.GRAPH_DOT_DIRECTORY)
+        PNG(".png", PluginConstants.GRAPH_IMAGES_DIRECTORY),
+        DOT(".dot", PluginConstants.GRAPH_DOT_DIRECTORY)
     }
 }
