@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class GraphStatsModel(
+data class GraphStats(
     @SerialName("root_name")
     val rootNodeName: String,
     @SerialName("modules_count")

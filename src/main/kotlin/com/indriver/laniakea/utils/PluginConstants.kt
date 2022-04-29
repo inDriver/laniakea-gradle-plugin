@@ -1,6 +1,6 @@
 package com.indriver.laniakea.utils
 
-object PluginUtils {
+object PluginConstants {
 
     val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
 
