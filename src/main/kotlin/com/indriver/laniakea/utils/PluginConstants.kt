@@ -8,4 +8,6 @@ object PluginConstants {
     const val GRAPH_IMAGES_DIRECTORY = "images"
     const val GRAPH_MODULES_STATS_DIRECTORY = "stats"
     const val GRAPH_DOT_DIRECTORY = "dot"
+
+    const val DEFAULT_STATS_FILE_NAME = "stats"
 }

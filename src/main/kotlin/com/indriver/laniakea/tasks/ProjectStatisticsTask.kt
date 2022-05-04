@@ -15,7 +15,6 @@ import com.indriver.laniakea.utils.PluginConstants
 import java.io.File
 
 const val TASK_PROJECT_MODULES_STATISTICS = "generateProjectModulesStats"
-private const val DEFAULT_STATS_FILE_NAME = "stats"
 
 open class ProjectStatisticsTask : DefaultTask() {
 
@@ -117,11 +116,9 @@ open class ProjectStatisticsTask : DefaultTask() {
             }
         }
 
-        val fileName = DEFAULT_STATS_FILE_NAME
-        val filePath = "${outputDirectory.path}/$fileName.json"
+        val filePath = "${outputDirectory.path}/${PluginConstants.DEFAULT_STATS_FILE_NAME}.json"
         return File(filePath).apply {
             this.outputStream().write(projectStatsJson.encodeToByteArray())
         }
-
     }
 }
