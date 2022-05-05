@@ -40,9 +40,6 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var shouldUseDotFormat: Boolean = false
 
-    @get:Input
-    var config = LaniakeaPluginConfig()
-
     @TaskAction
     fun run() {
         println("Running $TASK_DRAW_MODULES_STRUCTURE")

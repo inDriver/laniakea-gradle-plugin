@@ -21,9 +21,7 @@ class LaniakeaPlugin : Plugin<Project> {
             .create(LANIAKEA_PLUGIN_EXTENSION_NAME, LaniakeaPluginConfig::class.java)
 
         target.afterEvaluate {
-            it.tasks.register(TASK_DRAW_MODULES_STRUCTURE, DrawModulesStructureTask::class.java) {
-                it.config = laniakeaPluginConfig
-            }
+            it.tasks.register(TASK_DRAW_MODULES_STRUCTURE, DrawModulesStructureTask::class.java)
 
             it.tasks.register(TASK_VALIDATE_CRITICAL_PATH, ValidateCriticalPathTask::class.java) {
                 it.config = laniakeaPluginConfig
