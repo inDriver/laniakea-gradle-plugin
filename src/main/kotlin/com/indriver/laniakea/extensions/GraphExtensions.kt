@@ -5,6 +5,9 @@ import com.indriver.laniakea.models.GraphNode
 import com.indriver.laniakea.models.MostDistantNodesResult
 import java.lang.IllegalArgumentException
 
+/**
+ * @throws IllegalArgumentException if graph doesn't have desired node.
+ */
 fun Graph.findNodeByName(name: String): GraphNode {
     val node = nodes.firstOrNull { it.name == name }
     return node ?: throw IllegalArgumentException("Graph has no node with name $name")

@@ -2,6 +2,7 @@ package com.indriver.laniakea.utils
 
 object PluginConstants {
 
+    // Default modules connections
     val DEFAULT_CONFIGURATIONS = setOf("api", "implementation")
 
     const val PLUGIN_GROUP = "laniakea"

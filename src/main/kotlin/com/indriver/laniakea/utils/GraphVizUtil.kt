@@ -4,7 +4,6 @@ import guru.nidi.graphviz.attribute.Color
 import guru.nidi.graphviz.engine.Format
 import guru.nidi.graphviz.engine.Graphviz
 import guru.nidi.graphviz.model.Factory
-import guru.nidi.graphviz.model.MutableGraph
 import com.indriver.laniakea.models.Graph
 import com.indriver.laniakea.models.GraphNode
 import java.io.File
@@ -14,6 +13,9 @@ object GraphVizUtil {
     private const val GRAPH_NAME = "laniakea_graph"
     private const val DRAW_ALL_PATHS = -1
 
+    /**
+     * Generates graph image or file in specified folder (depends on file type).
+     */
     fun generateGraphImage(
         graph: Graph,
         longestPaths: List<List<GraphNode>>,
