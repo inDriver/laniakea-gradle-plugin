@@ -6,9 +6,7 @@ import org.gradle.api.Project
 import com.indriver.laniakea.tasks.DrawModulesStructureTask
 import com.indriver.laniakea.tasks.ProjectStatisticsTask
 import com.indriver.laniakea.tasks.ValidateCriticalPathTask
-import com.indriver.laniakea.tasks.TASK_DRAW_MODULES_STRUCTURE
-import com.indriver.laniakea.tasks.TASK_PROJECT_MODULES_STATISTICS
-import com.indriver.laniakea.tasks.TASK_VALIDATE_CRITICAL_PATH
+import com.indriver.laniakea.utils.PluginConstants.PLUGIN_GROUP
 
 class LaniakeaPlugin : Plugin<Project> {
 
@@ -20,15 +18,29 @@ class LaniakeaPlugin : Plugin<Project> {
         val laniakeaPluginConfig = target.extensions
             .create(LANIAKEA_PLUGIN_EXTENSION_NAME, LaniakeaPluginConfig::class.java)
 
-        target.afterEvaluate {
-            it.tasks.register(TASK_DRAW_MODULES_STRUCTURE, DrawModulesStructureTask::class.java) {
+        target.afterEvaluate { project ->
+            project.tasks.register(
+                DrawModulesStructureTask.TASK_NAME,
+                DrawModulesStructureTask::class.java
+            ) {
+                it.group = PLUGIN_GROUP
+                it.description = DrawModulesStructureTask.DESCRIPTION
+            }
+            project.tasks.register(
+                ValidateCriticalPathTask.TASK_NAME,
+                ValidateCriticalPathTask::class.java
+            ) {
+                it.group = PLUGIN_GROUP
+                it.description = ValidateCriticalPathTask.DESCRIPTION
                 it.config = laniakeaPluginConfig
             }
-
-            it.tasks.register(TASK_VALIDATE_CRITICAL_PATH, ValidateCriticalPathTask::class.java) {
-                it.config = laniakeaPluginConfig
+            project.tasks.register(
+                ProjectStatisticsTask.TASK_NAME,
+                ProjectStatisticsTask::class.java
+            ) {
+                it.group = PLUGIN_GROUP
+                it.description = ProjectStatisticsTask.DESCRIPTION
             }
-            it.tasks.register(TASK_PROJECT_MODULES_STATISTICS, ProjectStatisticsTask::class.java)
         }
     }
 }

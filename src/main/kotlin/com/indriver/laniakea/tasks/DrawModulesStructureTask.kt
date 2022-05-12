@@ -5,7 +5,6 @@ import com.indriver.laniakea.extensions.findRootNodeCandidates
 import com.indriver.laniakea.extensions.getParentToChildrenStructure
 import com.indriver.laniakea.models.Graph
 import com.indriver.laniakea.models.GraphNode
-import com.indriver.laniakea.models.LaniakeaPluginConfig
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -15,10 +14,12 @@ import com.indriver.laniakea.utils.FileUtil
 import com.indriver.laniakea.utils.PluginConstants
 import java.io.File
 
-// Default modules connections
-const val TASK_DRAW_MODULES_STRUCTURE = "drawModules"
-
 open class DrawModulesStructureTask : DefaultTask() {
+
+    companion object {
+        const val TASK_NAME = "drawModules"
+        const val DESCRIPTION = "Draws or creates file with project structure"
+    }
 
     @set:Option(option = "filters", description = "input filters for structure filtering")
     @get:Input
@@ -40,12 +41,9 @@ open class DrawModulesStructureTask : DefaultTask() {
     @get:Input
     var shouldUseDotFormat: Boolean = false
 
-    @get:Input
-    var config = LaniakeaPluginConfig()
-
     @TaskAction
     fun run() {
-        println("Running $TASK_DRAW_MODULES_STRUCTURE")
+        println("Running $TASK_NAME")
         println("Registered filters: $filtersInput\n")
 
         val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)

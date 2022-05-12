@@ -14,14 +14,16 @@ import org.gradle.api.tasks.TaskAction
 import com.indriver.laniakea.utils.PluginConstants
 import java.io.File
 
-const val TASK_PROJECT_MODULES_STATISTICS = "generateProjectModulesStats"
-private const val DEFAULT_STATS_FILE_NAME = "stats"
-
 open class ProjectStatisticsTask : DefaultTask() {
+
+    companion object {
+        const val TASK_NAME = "generateProjectModulesStats"
+        const val DESCRIPTION = "Generates project statistics"
+    }
 
     @TaskAction
     fun run() {
-        println("Running $TASK_PROJECT_MODULES_STATISTICS")
+        println("Running $TASK_NAME")
         val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)
 
         val modulesCount = graph.nodes.size
@@ -117,11 +119,9 @@ open class ProjectStatisticsTask : DefaultTask() {
             }
         }
 
-        val fileName = DEFAULT_STATS_FILE_NAME
-        val filePath = "${outputDirectory.path}/$fileName.json"
+        val filePath = "${outputDirectory.path}/${PluginConstants.DEFAULT_STATS_FILE_NAME}.json"
         return File(filePath).apply {
             this.outputStream().write(projectStatsJson.encodeToByteArray())
         }
-
     }
 }

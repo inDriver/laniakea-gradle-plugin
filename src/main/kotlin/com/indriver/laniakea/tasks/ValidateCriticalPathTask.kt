@@ -11,16 +11,19 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import com.indriver.laniakea.utils.PluginConstants
 
-const val TASK_VALIDATE_CRITICAL_PATH = "validateCriticalPath"
-
 open class ValidateCriticalPathTask : DefaultTask() {
+
+    companion object {
+        const val TASK_NAME = "validateCriticalPath"
+        const val DESCRIPTION = "Validates modules connections critical path"
+    }
 
     @get:Input
     var config = LaniakeaPluginConfig()
 
     @TaskAction
     fun run() {
-        println("Running $TASK_VALIDATE_CRITICAL_PATH")
+        println("Running $TASK_NAME")
         println("Registered max critical path length is: ${config.maxCriticalPathLength}")
         printDivider()
         val graph = project.getParentToChildrenStructure(PluginConstants.DEFAULT_CONFIGURATIONS)
