@@ -1,11 +1,22 @@
 # Laniakea Gradle Plugin
 
-TODO: short desc
+TODO(dv): repo version label
+TODO(dv): example: connect and add images
+
+A Gradle Plugin that helps to understand your project modules structure.
+
 ## Overview
+
+TODO(dv): describe main idea and purpose
 
 ## Usage
 
 ## Inspiration
+
+Thanks to other tools for inspiration:
+
+- [Module Graph Assert](https://github.com/jraska/modules-graph-assert)
+- [module-dependency-graph](https://github.com/savvasdalkitsis/module-dependency-graph)
 
 ## License
 
