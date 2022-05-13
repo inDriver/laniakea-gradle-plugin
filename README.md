@@ -1,13 +1,29 @@
-# Laniakea Gradle Plugin
+# Laniakea Gradle Plugin ✨
 
 TODO(dv): repo version label
+
 TODO(dv): example: connect and add images
 
 A Gradle Plugin that helps to understand your project modules structure.
 
+What the Laniakea word means? This is the galaxy supercluster ✨. [See more info here](https://en.wikipedia.org/wiki/Laniakea_Supercluster)
+
 ## Overview
 
-TODO(dv): describe main idea and purpose
+The main idea of this plugin is to help developers understand their project structure. They can easily visualize whole project or only small part.
+Or even more, developers can visualize modules clusters together and compare different approaches, find non-obvius connections and so on.
+
+TODO(dv): "why and for that" block
+
+### Features
+
+- Project structure visualization with result filtering. No additional tools required*
+- Modules critical paths visualization. Understand how this paths can affect your structure
+- Critical path length validation
+- Project statistics (modules count, critical paths lengths, etc)
+- PNG/DOT file formats for result 
+
+*We use [this Grapviz wrapper](https://github.com/nidi3/graphviz-java). Thanks authors for this tool.
 
 ## Usage
 
