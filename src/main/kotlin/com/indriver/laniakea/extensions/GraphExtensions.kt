@@ -78,6 +78,26 @@ fun Graph.findMostDistantNodes(rootNodeName: String): MostDistantNodesResult {
     return MostDistantNodesResult(maxDistanceInNodes, mostDistantNodes)
 }
 
+fun Graph.calculateHeight(rootNodeName: String): Int {
+    var maxHeight = 0
+    if (nodes.isEmpty()) {
+        return maxHeight
+    }
+
+    fun investigateNode(node: GraphNode, prevHeight: Int = 0) {
+        val curHeight = prevHeight + 1
+        maxHeight = maxHeight.coerceAtLeast(curHeight)
+
+        for (childName in node.children) {
+            val childNode = findNodeByName(childName)
+            investigateNode(childNode, curHeight)
+        }
+    }
+
+    val rootNode = findNodeByName(rootNodeName)
+    investigateNode(rootNode)
+    return maxHeight
+}
 
 fun Graph.findRootNodeCandidates(): Set<GraphNode> {
     if (nodes.isEmpty()) {
