@@ -35,7 +35,7 @@ For a project structure visualization run the following:
 This command will create an image of all project modules inside `/laniakeaImage` folder.
 
 For this command few options are available:
-- `--filters` - will filter project structure. You can filter your structure by one filter or combine them. For examle, `--filters=core` or `--filters={core,group1,group2}`
+- `--filters` - will filter project structure. You can filter (by modules names) your structure by one filter or combine them. For example, `--filters=core` or `--filters={core,group1,group2}`
 - `--cp` - will highlight the critical path
 - `--dot` - use this option if you want to create .dot file with project structure instead of png image. This option may be useful if image creation doesn't work (it may happen in some cases)
 
