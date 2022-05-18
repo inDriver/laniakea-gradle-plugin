@@ -1,5 +1,6 @@
 package com.indriver.laniakea.tasks
 
+import com.indriver.laniakea.extensions.calculateHeight
 import com.indriver.laniakea.extensions.findLongestPaths
 import com.indriver.laniakea.extensions.findRootNodeCandidates
 import com.indriver.laniakea.extensions.getParentToChildrenStructure
@@ -75,15 +76,20 @@ open class DrawModulesStructureTask : DefaultTask() {
                 null
             }
             rootNodes.size > 1 -> {
-                val msg = "The project has a few root modules. " +
-                        "You should set a root module: ${rootNodes.map { it.name }}"
-                println(msg)
-                null
+                chooseRootNode(graph, rootNodes)
             }
             else -> {
                 rootNodes.first().name
             }
         }
+    }
+
+    private fun chooseRootNode(graph: Graph, nodes: Set<GraphNode>): String {
+        val nodeName = nodes.map { it.name }
+            .associateWith { graph.calculateHeight(it) }
+            .maxByOrNull { it.value }
+
+        return requireNotNull(nodeName).key
     }
 
     private fun filterNodesIfNeeded(nodesList: List<GraphNode>): List<GraphNode> {
