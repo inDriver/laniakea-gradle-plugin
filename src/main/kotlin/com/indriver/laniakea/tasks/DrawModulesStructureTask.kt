@@ -1,5 +1,6 @@
 package com.indriver.laniakea.tasks
 
+import com.indriver.laniakea.extensions.calculateHeight
 import com.indriver.laniakea.extensions.findLongestPaths
 import com.indriver.laniakea.extensions.findRootNodeCandidates
 import com.indriver.laniakea.extensions.getParentToChildrenStructure
@@ -75,7 +76,7 @@ open class DrawModulesStructureTask : DefaultTask() {
                 null
             }
             rootNodes.size > 1 -> {
-                chooseRootNode(graph, nodes)
+                chooseRootNode(graph, rootNodes)
             }
             else -> {
                 rootNodes.first().name
