@@ -37,6 +37,8 @@ There are a few options available for this command:
 - `--filters` - will filter the project structure. You can filter your structure (by modules names) using a single filter or a combination of several filters, for example: `--filters=core` or `--filters={core,group1,group2}`
 - `--cp` - will highlight the critical path
 - `--dot` - use this option if you want to create a .dot file with the project structure instead of a .png image. This option can be useful if image creation doesn't work (which may happen in some cases)
+- `--dep` - will add dependencies for filtered modules, for example: `./gradlew drawModules --filters=features --dep`
+- `--rootModule` - you can specify the "root module" to find the critical path. By default, the project's root module is searched automatically
 
 To validate a critical path, run the following command:
 
