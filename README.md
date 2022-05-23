@@ -10,42 +10,41 @@ What does the Laniakea word mean? This is the galaxy supercluster ✨. [See more
 
 ## Overview
 
-The main idea of this plugin is to help developers understand their project structure. They can easily visualize the whole project or only a small part.
-Or even more, developers can visualize module clusters together and compare different approaches, find non-obvious connections, and so on.
+The main purpose of this plugin is to help developers understand their project structure. It allows them to easily visualize the whole project, or only a small part of it, depending on their preference. Additionally, developers can use this tool to visualize module clusters together and compare different approaches, locate connections that may not be immediately obvious, and so on.
 
 ### Features
 
-- Project structure visualization with result filtering. No additional tools are required*
-- Modules critical paths visualization. Understand how these paths can affect your structure
-- Critical path length validation
-- Project statistics (modules count, critical paths lengths, etc)
-- PNG/DOT file formats for the result
+- Visualization of project structure with result filtering. No additional tools are required*
+- Visualization of modules critical paths – understand how these paths can affect your structure
+- Validation of the lengths of critical paths
+- Project statistics (module count, lengths of critical paths, etc.)
+- Results in .PNG/.DOT file format
 
-*We use [this Grapviz wrapper](https://github.com/nidi3/graphviz-java). Thanks authors for this tool.
+*We use [this Grapviz wrapper](https://github.com/nidi3/graphviz-java). Many thanks to the authors for this tool!
 
 ## Installation
 
 ## Usage
 
-For a project structure visualization run the following:
+To visualize project structure, run the following command:
 
 ```
 ./gradlew drawModules
 ```
-This command will create an image of all project modules inside `/laniakeaImage` folder.
+This will create an image of all project modules inside the /laniakeaImage folder.
 
-For this command few options are available:
-- `--filters` - will filter project structure. You can filter (by modules names) your structure by one filter or combine them. For example, `--filters=core` or `--filters={core,group1,group2}`
+There are a few options available for this command:
+- `--filters` - will filter the project structure. You can filter your structure (by modules names) using a single filter or a combination of several filters, for example: `--filters=core` or `--filters={core,group1,group2}`
 - `--cp` - will highlight the critical path
-- `--dot` - use this option if you want to create .dot file with project structure instead of png image. This option may be useful if image creation doesn't work (it may happen in some cases)
+- `--dot` - use this option if you want to create a .dot file with the project structure instead of a .png image. This option can be useful if image creation doesn't work (which may happen in some cases)
 
-For a critical path validation run the following:
+To validate a critical path, run the following command:
 
 ```
 ./gradlew validateCriticalPath
 ```
 
-You have to specify `maxCriticalPathLength` param for this command inside the plugin configuration block.
+You will need to specify the parameter `maxCriticalPathLength` for this command inside the plugin configuration block. 
 Add this inside your root `build.gradle`:
 ```
 laniakeaPlugin {    
@@ -53,23 +52,23 @@ laniakeaPlugin {
 }
 ```
 
-For project statistics run the following:
+For project statistics, run the following command:
 ```
 ./gradlew generateProjectModulesStats
 ```
 
-This command will show you project statistics and create a json file with these statistics. This feature is still under construction, but you can use it for simple statistics.
+This will display the project statistics, and create a .json file containing these statistics. This feature is still under construction, but you can use it for simple statistics.
 
 ## Inspiration
 
-Thanks to other tools for inspiration:
+Thanks to these tools for inspiration:
 
 - [Module Graph Assert](https://github.com/jraska/modules-graph-assert)
 - [module-dependency-graph](https://github.com/savvasdalkitsis/module-dependency-graph)
 
 ## License
 
-This plugin is released under the Apache 2.0 license. [See LICENSE](https://github.com/inDriver/laniakea-gradle-plugin/blob/main/LICENSE) for details.
+This plugin has been released under the Apache 2.0 license. [See LICENSE](https://github.com/inDriver/laniakea-gradle-plugin/blob/main/LICENSE) for details.
 
     Copyright 2022  Suol Innovations Ltd.
 
