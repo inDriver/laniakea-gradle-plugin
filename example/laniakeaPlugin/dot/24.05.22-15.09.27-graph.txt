@@ -1,0 +1,9 @@
+digraph "laniakea_graph" {
+":features:feature1" -> ":features:feature3" ["color"="red"]
+":features:feature1" -> ":features:feature2" ["color"="black"]
+":features:feature2" -> ":features:feature2-2" ["color"="black"]
+":features:feature2" -> ":features:feature2-1" ["color"="black"]
+":features:feature3" -> ":features:feature3-1" ["color"="red"]
+":features:feature3-1" -> ":features:feature4" ["color"="red"]
+":app" -> ":features:feature1" ["color"="red"]
+}

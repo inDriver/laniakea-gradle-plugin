@@ -2,8 +2,6 @@
 
 TODO(dv): repo version label
 
-TODO(dv): example: connect and add images
-
 A Gradle Plugin that helps to understand your project modules structure.
 
 What does the Laniakea word mean? This is the galaxy supercluster ✨. [See more info here](https://en.wikipedia.org/wiki/Laniakea_Supercluster)
@@ -11,6 +9,8 @@ What does the Laniakea word mean? This is the galaxy supercluster ✨. [See more
 ## Overview
 
 The main purpose of this plugin is to help developers understand their project structure. It allows them to easily visualize the whole project, or only a small part of it, depending on their preference. Additionally, developers can use this tool to visualize module clusters together and compare different approaches, locate connections that may not be immediately obvious, and so on.
+
+<img src="https://raw.githubusercontent.com/inDriver/laniakea-gradle-plugin/main/example/laniakeaPlugin/images/24.05.22-14.48.53-graph.png" width="521" height="332">
 
 ### Features
 
