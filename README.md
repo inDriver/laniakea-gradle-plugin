@@ -24,6 +24,8 @@ The main purpose of this plugin is to help developers understand their project s
 
 ## Installation
 
+TODO(dv): add after publication
+
 ## Usage
 
 To visualize project structure, run the following command:
@@ -60,6 +62,12 @@ For project statistics, run the following command:
 ```
 
 This will display the project statistics, and create a .json file containing these statistics. This feature is still under construction, but you can use it for simple statistics.
+
+## Future plans
+
+- Build time tracker for modules
+  
+- Interactive map for modules (with filters, "heat map", etc) 
 
 ## Inspiration
 
