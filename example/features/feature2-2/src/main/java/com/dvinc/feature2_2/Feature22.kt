@@ -1,3 +1,3 @@
 package com.dvinc.feature2_2
 
-object Feature22
+class Feature22
