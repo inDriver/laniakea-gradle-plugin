@@ -14,3 +14,5 @@ include ':features:feature2-2'
 include ':features:feature3'
 include ':features:feature3-1'
 include ':features:feature4'
+
+includeBuild("../") // Include build for debug
