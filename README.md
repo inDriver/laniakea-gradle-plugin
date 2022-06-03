@@ -1,6 +1,6 @@
 # Laniakea Gradle Plugin ✨
 
-TODO(dv): repo version label
+[![](https://jitpack.io/v/inDriver/laniakea-gradle-plugin.svg)](https://jitpack.io/#inDriver/laniakea-gradle-plugin)
 
 A Gradle Plugin that helps to understand your project modules structure.
 
@@ -24,7 +24,22 @@ The main purpose of this plugin is to help developers understand their project s
 
 ## Installation
 
-TODO(dv): add after publication
+Add it in your root build.gradle:
+
+```
+buildscript {
+    repositories {
+        // ...
+        maven { url 'https://jitpack.io' }
+    }
+    dependencies {
+        // ...
+        classpath "com.github.inDriver:laniakea-gradle-plugin:1.0.0"
+    }
+}
+
+apply plugin: 'com.indriver.laniakea.plugin'
+```
 
 ## Usage
 
