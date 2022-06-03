@@ -2,27 +2,11 @@ plugins {
     id 'maven-publish'
     id 'org.jetbrains.kotlin.jvm' version '1.6.10'
     id 'java-gradle-plugin'
-    id("com.github.johnrengelman.shadow") version "7.0.0" // ./gradlew shadowJar will generate jar in build/libs/
     id 'org.jetbrains.kotlin.plugin.serialization' version "1.6.10"
 }
 
 group 'com.indriver'
 version '0.0.4'
-
-// For publishing update plugin versions and use ./gradlew publish
-publishing {
-    repositories {
-        maven {
-            url myMavenRepoWriteUrl
-        }
-    }
-
-    publications {
-        maven(MavenPublication) {
-            from components.java
-        }
-    }
-}
 
 repositories {
     mavenCentral()
@@ -35,11 +19,6 @@ gradlePlugin {
             implementationClass = 'com.indriver.laniakea.LaniakeaPlugin'
         }
     }
-}
-
-// https://imperceptiblethoughts.com/shadow/configuration/minimizing/
-shadowJar {
-    minimize()
 }
 
 dependencies {
